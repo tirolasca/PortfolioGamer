@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfólio | Jornada do Desenvolvedor</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- HUD / MENU -->
+    <header class="hud">
+      <h1><i class="fa-solid fa-gamepad"></i> Jornada do Desenvolvedor</h1>
+      <nav>
+        <a href="#inicio"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="#formacao"
+          ><i class="fa-solid fa-graduation-cap"></i> Formação</a
+        >
+        <a href="#cursos"><i class="fa-solid fa-scroll"></i> Cursos</a>
+        <a href="#projetos"><i class="fa-solid fa-dragon"></i> Projetos</a>
+        <a href="#skills"><i class="fa-solid fa-sitemap"></i> Habilidades</a>
+        <a href="#contato"><i class="fa-solid fa-address-card"></i> Contato</a>
+      </nav>
+    </header>
+
+    <section class="conquistas">
+      <h2><i class="fa-solid fa-trophy"></i> Conquistas</h2>
+      <ul id="listaConquistas"></ul>
+    </section>
+
+    <div class="progresso-jornada">
+      <div id="barraProgresso"></div>
+    </div>
+
+    <div id="notificacao" class="notificacao hidden">
+      <i class="fa-solid fa-trophy"></i>
+      <span id="textoNotificacao"></span>
+    </div>
+
+    <!-- TELA INICIAL -->
+    <section id="inicio" class="fase inicio">
+      <div class="card">
+        <img src="img/avatar.png" alt="Avatar do personagem" class="avatar" />
+
+        <h2 id="saudacao">Bem-vindo, aventureiro!</h2>
+        <h3>Lucas Santos</h3>
+
+        <p class="bio">
+          Desenvolvedor em formação, apaixonado por tecnologia, dados e
+          inovação. Nesta jornada, você conhecerá minhas habilidades, projetos e
+          conquistas.
+        </p>
+
+        <button id="startGame">
+          <i class="fa-solid fa-play"></i> Iniciar Jornada
+        </button>
+      </div>
+    </section>
+
+    <!-- FASE 1 - FORMAÇÃO -->
+    <section id="formacao" class="fase">
+      <h2>
+        <i class="fa-solid fa-graduation-cap"></i>
+        Fase 1 — Formação Acadêmica
+      </h2>
+      <div id="listaFormacao" class="grid"></div>
+    </section>
+
+    <!-- FASE 2 - CURSOS -->
+    <section id="cursos" class="fase">
+      <h2>
+        <i class="fa-solid fa-scroll"></i>
+        Fase 2 — Cursos & Certificações
+      </h2>
+      <div id="listaCursos" class="grid"></div>
+    </section>
+
+    <!-- FASE 3 - PROJETOS -->
+    <section id="projetos" class="fase">
+      <h2>
+        <i class="fa-solid fa-dragon"></i>
+        Fase 3 — Projetos (Boss Battles)
+      </h2>
+
+      <div class="filtros">
+        <button data-categoria="todos">
+          <i class="fa-solid fa-layer-group"></i> Todos
+        </button>
+        <button data-categoria="web">
+          <i class="fa-solid fa-globe"></i> Web
+        </button>
+        <button data-categoria="frontend">
+          <i class="fa-solid fa-desktop"></i> Frontend
+        </button>
+        <button data-categoria="backend">
+          <i class="fa-solid fa-server"></i> Backend
+        </button>
+      </div>
+
+      <div id="listaProjetos" class="grid"></div>
+    </section>
+
+    <!-- FASE 4 - HABILIDADES -->
+    <section id="skills" class="fase">
+      <h2>
+        <i class="fa-solid fa-sitemap"></i>
+        Fase 4 — Árvore de Habilidades
+      </h2>
+      <div id="listaSkills" class="grid"></div>
+    </section>
+
+    <!-- TELA FINAL -->
+    <section id="contato" class="fase final">
+      <h2>
+        <i class="fa-solid fa-flag-checkered"></i>
+        Jornada Concluída
+      </h2>
+      <p>Obrigado por jogar! Vamos nos conectar:</p>
+
+      <div class="links">
+        <a href="#" target="_blank">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa-solid fa-briefcase"></i> Portfólio
+        </a>
+      </div>
+      <button id="resetJornada" class="btn-reset">
+        <i class="fa-solid fa-rotate-left"></i> Resetar Jornada
+      </button>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>
