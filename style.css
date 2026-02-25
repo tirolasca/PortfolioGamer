@@ -119,6 +119,173 @@ body {
 }
 
 /* =========================
+   NPC / GUIA DA JORNADA
+   ========================= */
+.npc-container {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem; /* Fica no canto esquerdo para não brigar com a notificação na direita */
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* O container do personagem */
+.npc-sprite {
+  width: 70px; /* Aumentei um pouco para a imagem respirar */
+  height: 70px;
+  background: rgba(30, 41, 59, 0.8); /* Fundo um pouco mais escuro/transparente */
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  animation: float 3s ease-in-out infinite;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden; /* Garante que a imagem não saia das bordas redondas */
+}
+
+.npc-sprite:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
+}
+
+/* A Mágica do Pixel Art no CSS */
+.npc-img {
+  width: 80%; /* Ajuste essa porcentagem dependendo do tamanho da sua imagem */
+  height: auto;
+  object-fit: contain;
+  
+  /* ESTA É A PROPRIEDADE MÁGICA: */
+  image-rendering: pixelated; 
+  /* Faz com que o navegador não embaçe a imagem ao aumentar o tamanho, 
+     mantendo os quadradinhos do pixel art perfeitos! */
+}
+/* Balão de Fala estilo RPG */
+.npc-balao {
+  background: rgba(15, 23, 42, 0.95);
+  border: 2px solid var(--text-primary);
+  border-radius: 8px 8px 8px 0; /* Ponta do balão apontando para o NPC */
+  padding: 1rem 2rem 1rem 1rem;
+  max-width: 250px;
+  box-shadow: 4px 4px 0px var(--accent-color);
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.npc-balao.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Impede que o jogador clique num balão invisível */
+  transform: translateY(15px); /* Faz ele descer um pouquinho ao sumir */
+}
+
+.npc-balao p {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.btn-fechar-npc {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  color: var(--boss-color);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.btn-fechar-npc:hover {
+  transform: scale(1.1);
+  color: #f87171;
+}
+
+/* Animação do NPC Flutuando */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* =========================
+   MINI MAPA (FAST TRAVEL)
+   ========================= */
+.mini-mapa {
+  position: fixed;
+  left: 1.5rem;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Linha de fundo que conecta os pontos */
+.mapa-linha {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  background-color: var(--surface-hover);
+  z-index: -1;
+  border-radius: 2px;
+}
+
+/* Os nós (pontos do mapa) */
+.mapa-ponto {
+  width: 40px;
+  height: 40px;
+  background-color: var(--surface-color);
+  border: 3px solid var(--surface-hover);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover no ponto */
+.mapa-ponto:hover {
+  transform: scale(1.2);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Estado: Fase já visitada (Explorada) */
+.mapa-ponto.explorado {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Estado: Fase atual onde o jogador está (Brilho Neon) */
+.mapa-ponto.ativo {
+  border-color: var(--gold-color);
+  color: var(--gold-color);
+  background-color: rgba(251, 191, 36, 0.2);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+  transform: scale(1.1);
+}
+
+/* =========================
    5. LAYOUT PRINCIPAL E GRIDS
    ========================= */
 main {
@@ -547,6 +714,63 @@ button:hover,
   margin-bottom: 1rem;
 }
 
+/* =========================
+   PAINEL DE CONQUISTAS (LISTA LATERAL)
+   ========================= */
+#listaConquistas {
+  list-style: none;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0;
+}
+
+/* Base de cada item da lista */
+.conquista-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  background: var(--surface-color);
+  border: 1px solid var(--surface-hover);
+  transition: all 0.3s;
+  font-size: 0.85rem;
+  font-family: var(--font-texto);
+}
+
+/* Estado 1: CONQUISTA DESBLOQUEADA (Brilhante) */
+.conquista-item.desbloqueada {
+  border-color: var(--gold-color);
+  color: var(--gold-color);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.conquista-item.desbloqueada i {
+  color: var(--gold-color);
+  font-size: 1.1rem;
+  text-shadow: 0 0 5px var(--gold-color);
+}
+
+/* Estado 2: CONQUISTA BLOQUEADA (Cinza e com Cadeado) */
+.conquista-item.bloqueada {
+  opacity: 0.6;
+  filter: grayscale(100%);
+  color: var(--text-secondary);
+}
+
+.conquista-item.bloqueada i {
+  color: var(--surface-hover);
+  font-size: 1.1rem;
+}
+
+/* Interação ao passar o mouse por cima do painel */
+.conquistas:hover .conquista-item.bloqueada {
+  opacity: 0.8; /* Dá uma leve clareada pra incentivar o clique */
+}
+
 .progresso-fases-container {
   height: 8px;
   background: var(--bg-color);
@@ -566,7 +790,7 @@ button:hover,
 .notificacao {
   position: fixed;
   bottom: 2rem;
-  right: -700px; /* Escondido fora da tela */
+  right: -900px; /* Escondido fora da tela */
   background: var(--surface-color);
   border-left: 5px solid var(--gold-color);
   padding: 1rem 1.5rem;
@@ -586,6 +810,201 @@ button:hover,
 .notificacao i {
   color: var(--gold-color);
   font-size: 1.5rem;
+}
+
+/* =========================
+   INVENTÁRIO E LOOT ESCONDIDO
+   ========================= */
+.inventario-container {
+  margin-top: 2rem;
+  border-top: 2px dashed var(--surface-hover);
+  padding-top: 1rem;
+}
+
+.inventario-slots {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.slot {
+  width: 45px;
+  height: 45px;
+  background: var(--bg-color);
+  border: 2px solid var(--surface-hover);
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--surface-hover);
+  font-size: 1.2rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slot.preenchido {
+  border-color: var(--gold-color);
+  color: var(--gold-color);
+  background: rgba(251, 191, 36, 0.1);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+  transform: scale(1.1);
+}
+
+/* Itens escondidos (Loot) */
+.loot-item {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0.15; /* Quase invisível */
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.loot-item:hover {
+  opacity: 1;
+  color: var(--gold-color);
+  transform: scale(1.3) rotate(10deg);
+  text-shadow: 0 0 10px var(--gold-color);
+}
+
+/* Posições dos itens */
+#loot-chave { top: 20px; left:20px; }
+#loot-pergaminho { top: 10px; right: -40px; }
+#loot-pocao { bottom: 20px; right: 50px; }
+
+/* =========================
+   TEMA SECRETO: GAMEBOY RETRO
+   ========================= */
+body.theme-gameboy {
+  /* Substitui as variáveis de cor para a paleta clássica do Gameboy */
+  --bg-color: #8bac0f;
+  --surface-color: #9bbc0f;
+  --surface-hover: #306230;
+  --text-primary: #0f380f;
+  --text-secondary: #306230;
+  --accent-color: #0f380f;
+  --boss-color: #0f380f;
+  --gold-color: #0f380f;
+  font-family: var(--font-titulo); /* Força a fonte pixelada em tudo! */
+}
+
+body.theme-gameboy .card {
+  border: 4px solid #0f380f;
+  border-radius: 0; /* Tira os cantos arredondados para ficar mais retro */
+  box-shadow: 4px 4px 0px #0f380f;
+}
+
+body.theme-gameboy .loot-item, 
+body.theme-gameboy .slot {
+  display: none; /* Esconde o inventário quando o tema ativa */
+}
+
+/* =========================
+   BOTÃO DE ALTERNAR TEMA 8-BITS
+   ========================= */
+.btn-toggle-tema {
+  margin-top: 1rem;
+  width: 100%;
+  background: var(--surface-color);
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+  padding: 0.6rem;
+  border-radius: 4px;
+  font-family: var(--font-texto);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-toggle-tema:hover {
+  background: var(--accent-color);
+  color: var(--bg-color);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.btn-toggle-tema.hidden {
+  display: none;
+}
+
+/* Quando o modo Gameboy estiver ativo, o botão se adapta às cores retro */
+body.theme-gameboy .btn-toggle-tema {
+  background: #306230; /* Fundo escuro do Gameboy */
+  color: #9bbc0f; /* Texto claro */
+  border-color: #0f380f;
+}
+
+body.theme-gameboy .btn-toggle-tema:hover {
+  background: #0f380f;
+  color: #8bac0f;
+}
+
+/* =========================
+   TOOLTIPS (CAIXAS DE INFORMAÇÃO)
+   ========================= */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+/* O balão e a setinha invisíveis por padrão */
+[data-tooltip]::before,
+[data-tooltip]::after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  z-index: 100;
+  pointer-events: none; /* Ignora cliques no tooltip */
+}
+
+/* A Caixa de Texto */
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  width: max-content;
+  max-width: 220px;
+  background: rgba(15, 23, 42, 0.95);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-color);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: var(--font-texto);
+  line-height: 1.4;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  
+  /* Posição: Aparece à esquerda do elemento */
+  right: 110%; 
+  top: 50%;
+  transform: translateY(-50%) translateX(10px); 
+}
+
+/* A Setinha apontando pro elemento */
+[data-tooltip]::before {
+  content: '';
+  border: 6px solid transparent;
+  border-left-color: var(--accent-color);
+  right: calc(110% - 12px); 
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+}
+
+/* Efeito ao passar o mouse: Torna visível e desliza pra posição */
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Ajuste no modo 8-bits */
+body.theme-gameboy [data-tooltip]::after {
+  background: #0f380f;
+  color: #8bac0f;
+  border-color: #9bbc0f;
+  border-radius: 0;
+}
+body.theme-gameboy [data-tooltip]::before {
+  border-left-color: #9bbc0f;
 }
 
 /* =========================
@@ -836,5 +1255,15 @@ button:hover,
   }
   .divisor {
     display: none;
+  }
+
+  .npc-container {
+    bottom: 1rem;
+    left: 1rem;
+  }
+  .npc-sprite {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 }

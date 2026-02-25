@@ -44,6 +44,40 @@
       <div class="progresso-fases-container" title="Fases Exploradas">
         <div id="barraFases"></div>
       </div>
+
+      <div class="inventario-container">
+        <h2><i class="fa-solid fa-box-open"></i> Inventário</h2>
+        <div
+          id="slotsInventario"
+          class="inventario-slots"
+          title="Encontra os 3 itens escondidos no site!"
+        >
+          <div
+            class="slot"
+            data-slot="chave"
+            data-tooltip="Slot Vazio (Loot 1/3)"
+          >
+            <i class="fa-solid fa-question"></i>
+          </div>
+          <div
+            class="slot"
+            data-slot="pergaminho"
+            data-tooltip="Slot Vazio (Loot 2/3)"
+          >
+            <i class="fa-solid fa-question"></i>
+          </div>
+          <div
+            class="slot"
+            data-slot="pocao"
+            data-tooltip="Slot Vazio (Loot 3/3)"
+          >
+            <i class="fa-solid fa-question"></i>
+          </div>
+        </div>
+      </div>
+      <button id="btnToggleTema" class="btn-toggle-tema hidden">
+        <i class="fa-solid fa-gamepad"></i> Modo 8-bits
+      </button>
     </aside>
 
     <div
@@ -56,8 +90,67 @@
       <span id="textoNotificacao"></span>
     </div>
 
+    <aside id="miniMapa" class="mini-mapa" aria-label="Mini Mapa das Fases">
+      <div class="mapa-linha"></div>
+
+      <a
+        href="#inicio"
+        class="mapa-ponto"
+        data-fase="inicio"
+        title="Fase Inicial"
+      >
+        <i class="fa-solid fa-house"></i>
+      </a>
+      <a
+        href="#formacao"
+        class="mapa-ponto"
+        data-fase="formacao"
+        title="Fase 1: Formação"
+      >
+        <i class="fa-solid fa-graduation-cap"></i>
+      </a>
+      <a
+        href="#experiencias"
+        class="mapa-ponto"
+        data-fase="experiencias"
+        title="Fase 2: Missões"
+      >
+        <i class="fa-solid fa-briefcase"></i>
+      </a>
+      <a
+        href="#projetos"
+        class="mapa-ponto"
+        data-fase="projetos"
+        title="Fase 3: Bosses"
+      >
+        <i class="fa-solid fa-dragon"></i>
+      </a>
+      <a
+        href="#skills"
+        class="mapa-ponto"
+        data-fase="skills"
+        title="Fase 4: Habilidades"
+      >
+        <i class="fa-solid fa-sitemap"></i>
+      </a>
+      <a
+        href="#contato"
+        class="mapa-ponto"
+        data-fase="contato"
+        title="Fim da Jornada"
+      >
+        <i class="fa-solid fa-flag-checkered"></i>
+      </a>
+    </aside>
+
     <main>
       <section id="inicio" class="fase inicio">
+        <i
+          class="fa-solid fa-key loot-item"
+          id="loot-chave"
+          onclick="coletarLoot('chave')"
+          title="Objeto Misterioso..."
+        ></i>
         <div class="card player-card">
           <img
             src="img/Perfil.png"
@@ -87,9 +180,27 @@
             <i class="fa-solid fa-graduation-cap"></i> Fase 1 — Formação
             Acadêmica
           </h2>
+          <i
+            class="fa-solid fa-scroll loot-item"
+            id="loot-pergaminho"
+            onclick="coletarLoot('pergaminho')"
+            title="Objeto Misterioso..."
+          ></i>
         </header>
         <div id="listaFormacao" class="grid"></div>
       </section>
+
+      <div id="npcHelper" class="npc-container">
+        <div id="npcBalao" class="npc-balao hidden">
+          <p id="npcTexto">Saudações! Eu sou o Guia da Jornada.</p>
+          <button id="fecharNpc" class="btn-fechar-npc">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div id="npcSprite" class="npc-sprite" aria-label="Falar com o NPC">
+          <img src="img/npc.png" alt="Mago Guia" class="npc-img" />
+        </div>
+      </div>
 
       <section id="experiencias" class="fase">
         <header class="fase-header">
@@ -268,6 +379,12 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
+          <i
+            class="fa-solid fa-flask loot-item"
+            id="loot-pocao"
+            onclick="coletarLoot('pocao')"
+            title="Objeto Misterioso..."
+          ></i>
           <a href="index.html">
             <img
               src="img/LogoNome.png"
@@ -279,7 +396,7 @@
         </div>
       </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

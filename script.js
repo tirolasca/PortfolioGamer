@@ -2,6 +2,8 @@
 // 1. ESTADO GLOBAL & DADOS
 // =========================
 const conquistasDesbloqueadas = new Set();
+const inventarioLoot = new Set();
+const totalLoot = 3;
 const fasesVisitadas = new Set();
 const fases = [
   "inicio",
@@ -14,10 +16,11 @@ const fases = [
 
 // Mock do array de conquistas (Adicionado pois faltava no original)
 const conquistas = [
-  { id: "inicio", texto: "A Jornada Começa!" },
-  { id: "boss", texto: "Primeiro Boss Derrotado!" },
-  { id: "skills", texto: "Habilidades Reconhecidas!" },
-  { id: "fim", texto: "Chegou ao fim da jornada!" },
+  { id: "inicio", texto: "A Jornada Começa!", descricao: "Você deu o primeiro passo ao iniciar a aventura.", dica: "Vá até o topo da página e inicie a jornada." },
+  { id: "experiencia", texto: "Diário de Missões!", descricao: "Investigou o histórico de missões do jogador.", dica: "Abra os detalhes de uma experiência na Fase 2." },
+  { id: "boss", texto: "Boss Derrotado!", descricao: "Comprovou sua força vencendo um Projeto.", dica: "Enfrente um Boss na Fase 3 clicando em 'Ver batalha'." },
+  { id: "skills", texto: "Habilidades Reconhecidas!", descricao: "Desbloqueou a visão da árvore de talentos.", dica: "Role até a Fase 4 para revelar as skills." },
+  { id: "fim", texto: "Fim da Jornada!", descricao: "Explorou todo o mapa e chegou ao Contato.", dica: "Desça até o fim da página para a recompensa final." },
 ];
 
 const formacoes = [
@@ -124,12 +127,175 @@ function inicializarSaudacao() {
 }
 
 // =========================
+// SISTEMA DE NPC / DICAS (SEQUENCIAL)
+// =========================
+
+// Transformamos em um Array (lista) para garantir a ordem exata das falas
+const dicasNPC = [
+  {
+    id: "inicio",
+    texto:
+      "Saudações, aventureiro! Sou o teu guia. Para começar a nossa jornada, sobe até ao topo e clica em 'Iniciar Jornada'.",
+  },
+  {
+    id: "experiencia",
+    texto:
+      "Excelente! Agora desce até à Fase 2 (Experiências) e clica em 'Ver mais detalhes' num dos registos para leres o diário da missão.",
+  },
+  {
+    id: "boss",
+    texto:
+      "Muito bem! Agora, desce até à Fase 3 (Projetos). Há chefões lá! Clica em 'Ver batalha' para derrotares algum.",
+  },
+  {
+    id: "skills",
+    texto:
+      "Bela vitória! Para fortalecer o teu personagem, continua a descer até à Fase 4 e revela as tuas Habilidades.",
+  },
+  {
+    id: "fim",
+    texto:
+      "Estás quase lá! O último tesouro desta jornada está escondido no final, na secção de Contato!",
+  },
+];
+
+function inicializarNPC() {
+  const npcSprite = document.getElementById("npcSprite");
+  const npcBalao = document.getElementById("npcBalao");
+  const npcTexto = document.getElementById("npcTexto");
+  const btnFechar = document.getElementById("fecharNpc");
+
+  if (!npcSprite || !npcBalao) return;
+
+  // Função central que define o que o NPC vai falar
+  function falarProximaDica() {
+    // Procura na lista a PRIMEIRA dica cuja conquista ainda NÃO foi desbloqueada
+    const proximaDica = dicasNPC.find(
+      (dica) => !conquistasDesbloqueadas.has(dica.id),
+    );
+
+    if (proximaDica) {
+      npcTexto.textContent = proximaDica.texto;
+    } else {
+      npcTexto.textContent =
+        "Incrível! Você completou toda a jornada. Tenho certeza que um recrutador ficaria impressionado!";
+    }
+
+    npcBalao.classList.remove("hidden");
+  }
+
+  // 1. Ao clicar no NPC, ele repete a dica atual
+  npcSprite.addEventListener("click", falarProximaDica);
+
+  // 2. Fechar o balão ao clicar no X
+  btnFechar.addEventListener("click", () => {
+    npcBalao.classList.add("hidden");
+  });
+
+  // 3. SAUDAÇÃO INICIAL: Faz o NPC falar sozinho assim que a página carrega
+  // Coloquei um atraso de 1 segundo (1000ms) para dar tempo da página abrir bonita antes dele falar
+  setTimeout(() => {
+    falarProximaDica();
+  }, 1000);
+}
+
+// =========================
+// SISTEMA DE LOOT E INVENTÁRIO
+// =========================
+function coletarLoot(idItem) {
+  // Se já apanhou o item, não faz nada
+  if (inventarioLoot.has(idItem)) return;
+
+  // Dicionário de ícones
+  const iconesLoot = {
+    'chave': 'fa-key',
+    'pergaminho': 'fa-scroll',
+    'pocao': 'fa-flask'
+  };
+
+  // 1. Adiciona ao inventário virtual
+  inventarioLoot.add(idItem);
+
+  // 2. Esconde o item do ecrã
+  const itemNoMapa = document.getElementById(`loot-${idItem}`);
+  if (itemNoMapa) itemNoMapa.style.display = 'none';
+
+  // 3. Preenche o slot no painel lateral
+  const slot = document.querySelector(`.slot[data-slot="${idItem}"]`);
+  if (slot) {
+    slot.classList.add('preenchido');
+    slot.innerHTML = `<i class="fa-solid ${iconesLoot[idItem]}"></i>`;
+  }
+
+  const descricoesLoot = {
+    'chave': 'Chave Dourada: Abre caminhos secretos.',
+    'pergaminho': 'Pergaminho Antigo: Contém códigos sagrados.',
+    'pocao': 'Poção de Mana: Restaura a energia criativa.'
+  };
+
+  slot.setAttribute('data-tooltip', descricoesLoot[idItem]);
+
+  // 4. Mostra uma notificação de sucesso
+  const textoNotificacao = document.getElementById("textoNotificacao");
+  const notificacao = document.getElementById("notificacao");
+  
+  textoNotificacao.textContent = `Loot encontrado: ${idItem.toUpperCase()}!`;
+  notificacao.classList.remove("hidden");
+  notificacao.classList.add("show");
+  setTimeout(() => notificacao.classList.remove("show"), 3000);
+
+  // 5. Verifica se apanhou todos para ativar o Tema Secreto!
+  if (inventarioLoot.size === totalLoot) {
+    setTimeout(ativarTemaSecreto, 2000); // Espera 2 segundos antes de ativar
+  }
+}
+
+function ativarTemaSecreto() {
+  document.body.classList.add("theme-gameboy");
+  
+  // Faz o botão aparecer no inventário!
+  const btnToggleTema = document.getElementById("btnToggleTema");
+  if (btnToggleTema) {
+    btnToggleTema.classList.remove("hidden");
+  }
+  
+  const textoNotificacao = document.getElementById("textoNotificacao");
+  const notificacao = document.getElementById("notificacao");
+  
+  textoNotificacao.textContent = "CÓDIGO SECRETO: Tema de 8-bits Desbloqueado!";
+  notificacao.classList.remove("hidden");
+  notificacao.classList.add("show");
+  
+  if (typeof levelUpEffect === "function") levelUpEffect();
+}
+
+// =========================
 // 4. RENDERIZAÇÕES DOM
 // =========================
 // Função simulada para evitar erros caso não exista no seu código
 function renderConquistas() {
-  // Lógica para renderizar os badges visuais de conquista no HTML
-  console.log("Conquistas atuais:", Array.from(conquistasDesbloqueadas));
+  const lista = document.getElementById("listaConquistas");
+  if (!lista) return;
+
+  lista.innerHTML = "";
+
+  conquistas.forEach((conquista) => {
+    const isDesbloqueada = conquistasDesbloqueadas.has(conquista.id);
+    const statusClass = isDesbloqueada ? "desbloqueada" : "bloqueada";
+    const iconClass = isDesbloqueada ? "fa-trophy" : "fa-lock";
+    
+    // Define o texto que vai aparecer no Tooltip
+    const tooltipText = isDesbloqueada 
+      ? `Desbloqueada: ${conquista.descricao}` 
+      : `Bloqueada: ${conquista.dica}`;
+
+    lista.innerHTML += `
+      <li class="conquista-item ${statusClass}" data-tooltip="${tooltipText}">
+        <i class="fa-solid ${iconClass}"></i>
+        <span>${conquista.texto}</span>
+      </li>
+    `;
+  });
 }
 
 function renderFormacao() {
@@ -209,6 +375,40 @@ function renderProjetos() {
   });
 }
 
+// =========================
+// EFEITO DE LEVEL UP (CONFETES)
+// =========================
+function levelUpEffect() {
+  // Verifica se a biblioteca de confetes carregou corretamente
+  if (typeof confetti !== "undefined") {
+    const duration = 3000; // 3 segundos de confetes
+    const end = Date.now() + duration;
+
+    (function frame() {
+      // Confetes saindo do canto esquerdo
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#10b981', '#fbbf24', '#0ff'] // Verde, Dourado, Ciano
+      });
+      // Confetes saindo do canto direito
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#10b981', '#fbbf24', '#0ff']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+  }
+}
+
 function inicializarFiltrosProjetos() {
   const botoes = document.querySelectorAll(".btn-filtro");
 
@@ -278,9 +478,16 @@ function mostrarNotificacao(id) {
 function desbloquearConquista(id) {
   if (!conquistasDesbloqueadas.has(id)) {
     conquistasDesbloqueadas.add(id);
-    renderConquistas();
-    mostrarNotificacao(id);
+    
+    renderConquistas(); // Atualiza o painel lateral mudando o cadeado para troféu
+    mostrarNotificacao(id); // Mostra o Toast na tela
     salvarEstado();
+    atualizarProgressoFases(); 
+
+    // Se a conquista desbloqueada for a última ("fim"), dispara o Level Up!
+    if (id === "fim") {
+      levelUpEffect();
+    }
   }
 }
 
@@ -330,7 +537,7 @@ function inicializarObservers() {
     .querySelectorAll(".fase")
     .forEach((fase) => faseObserver.observe(fase));
 
-  // Observadores de Conquistas Específicas
+
   const skillSection = document.getElementById("skills");
   if (skillSection) {
     new IntersectionObserver(
@@ -377,7 +584,6 @@ function inicializarEventos() {
       const barraScroll = document.getElementById("barraProgresso");
       if (barraScroll) barraScroll.style.width = "0%";
 
-      // Reseta os chefões visuais
       document.querySelectorAll(".card.boss").forEach((card) => {
         card.dataset.derrotado = "false";
         const icon = card.querySelector(".boss-icon");
@@ -394,21 +600,48 @@ function inicializarEventos() {
   }
 }
 
+function inicializarMiniMapa() {
+  const pontosMapa = document.querySelectorAll(".mapa-ponto");
+  const secoes = document.querySelectorAll(".fase");
+
+  // Observer para saber em qual seção o usuário está EXATAMENTE agora
+  const mapaObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Se pelo menos 50% da fase estiver visível na tela
+      if (entry.isIntersecting) {
+        const idFaseAtual = entry.target.id;
+
+        // 1. Remove a classe 'ativo' de todos os pontos
+        pontosMapa.forEach(p => p.classList.remove("ativo"));
+
+        // 2. Encontra o ponto correspondente à fase atual e ativa o brilho neon
+        const pontoAtual = document.querySelector(`.mapa-ponto[data-fase="${idFaseAtual}"]`);
+        if (pontoAtual) {
+          pontoAtual.classList.add("ativo");
+          pontoAtual.classList.add("explorado"); // Já marca como explorado para sempre
+        }
+      }
+    });
+  }, { threshold: 0.5 }); // O threshold 0.5 exige que metade da tela mostre a seção
+
+  secoes.forEach((sec) => mapaObserver.observe(sec));
+}
+
 function inicializarTimeline() {
   const botoes = document.querySelectorAll(".toggle-btn");
 
   botoes.forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      // Pega a <ul> que está logo antes do botão clicado
       const detalhes = e.currentTarget.previousElementSibling;
-      const icone = e.currentTarget.querySelector("i");
 
       detalhes.classList.toggle("open");
 
       if (detalhes.classList.contains("open")) {
         e.currentTarget.innerHTML =
           '<i class="fa-solid fa-eye-slash"></i> Esconder detalhes';
-        e.currentTarget.classList.add("btn-acao"); // Dá um brilho no botão
+        e.currentTarget.classList.add("btn-acao");
+
+        desbloquearConquista("experiencia");
       } else {
         e.currentTarget.innerHTML =
           '<i class="fa-solid fa-eye"></i> Ver mais detalhes';
@@ -418,9 +651,8 @@ function inicializarTimeline() {
   });
 }
 
-// =========================
+
 // 7. INICIALIZAÇÃO
-// =========================
 document.addEventListener("DOMContentLoaded", () => {
   inicializarSaudacao();
   renderFormacao();
@@ -431,4 +663,12 @@ document.addEventListener("DOMContentLoaded", () => {
   inicializarObservers();
   inicializarEventos();
   inicializarTimeline();
+  inicializarNPC();
+  inicializarMiniMapa();
+  const btnToggleTema = document.getElementById("btnToggleTema");
+  if (btnToggleTema) {
+    btnToggleTema.addEventListener("click", () => {
+      document.body.classList.toggle("theme-gameboy");
+    });
+  }
 });
