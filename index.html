@@ -3,141 +3,282 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfólio | Jornada do Desenvolvedor</title>
+    <meta
+      name="description"
+      content="Portfólio interativo e gamificado do desenvolvedor Lucas Santos."
+    />
+    <meta name="author" content="Lucas Santos" />
+    <title>Lucas Santos | Jornada do Desenvolvedor</title>
 
-    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
-
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- HUD / MENU -->
     <header class="hud">
-      <h1><i class="fa-solid fa-gamepad"></i> Jornada do Desenvolvedor</h1>
-      <nav>
+      <h1><i class="fa-solid fa-gamepad"></i> Nv. 1 Dev</h1>
+      <nav aria-label="Navegação Principal">
         <a href="#inicio"><i class="fa-solid fa-house"></i> Início</a>
         <a href="#formacao"
           ><i class="fa-solid fa-graduation-cap"></i> Formação</a
         >
-        <a href="#cursos"><i class="fa-solid fa-scroll"></i> Cursos</a>
+        <a href="#experiencias"
+          ><i class="fa-solid fa-briefcase"></i> Experiências</a
+        >
         <a href="#projetos"><i class="fa-solid fa-dragon"></i> Projetos</a>
         <a href="#skills"><i class="fa-solid fa-sitemap"></i> Habilidades</a>
         <a href="#contato"><i class="fa-solid fa-address-card"></i> Contato</a>
       </nav>
     </header>
 
-    <section class="conquistas">
-      <h2><i class="fa-solid fa-trophy"></i> Conquistas</h2>
-      <ul id="listaConquistas"></ul>
-    </section>
-
-    <div class="progresso-jornada">
+    <div class="progresso-jornada" aria-hidden="true">
       <div id="barraProgresso"></div>
     </div>
 
-    <div id="notificacao" class="notificacao hidden">
+    <aside class="conquistas">
+      <h2><i class="fa-solid fa-trophy"></i> Conquistas</h2>
+      <ul id="listaConquistas"></ul>
+
+      <div class="progresso-fases-container" title="Fases Exploradas">
+        <div id="barraFases"></div>
+      </div>
+    </aside>
+
+    <div
+      id="notificacao"
+      class="notificacao hidden"
+      role="alert"
+      aria-live="assertive"
+    >
       <i class="fa-solid fa-trophy"></i>
       <span id="textoNotificacao"></span>
     </div>
 
-    <!-- TELA INICIAL -->
-    <section id="inicio" class="fase inicio">
-      <div class="card">
-        <img src="img/avatar.png" alt="Avatar do personagem" class="avatar" />
+    <main>
+      <section id="inicio" class="fase inicio">
+        <div class="card player-card">
+          <img
+            src="img/Perfil.png"
+            alt="Avatar em pixel art do desenvolvedor Lucas"
+            class="avatar"
+          />
 
-        <h2 id="saudacao">Bem-vindo, aventureiro!</h2>
-        <h3>Lucas Santos</h3>
+          <h2 id="saudacao">Bem-vindo, aventureiro!</h2>
 
-        <p class="bio">
-          Desenvolvedor em formação, apaixonado por tecnologia, dados e
-          inovação. Nesta jornada, você conhecerá minhas habilidades, projetos e
-          conquistas.
-        </p>
+          <h3 class="glitch-text" data-text="Lucas Santos">Lucas Santos</h3>
 
-        <button id="startGame">
-          <i class="fa-solid fa-play"></i> Iniciar Jornada
-        </button>
+          <p class="bio">
+            Desenvolvedor em formação, apaixonado por tecnologia, dados e
+            inovação. Nesta jornada, você conhecerá minhas habilidades, projetos
+            e conquistas.
+          </p>
+
+          <button id="startGame" class="btn-acao">
+            <i class="fa-solid fa-play"></i> Iniciar Jornada
+          </button>
+        </div>
+      </section>
+
+      <section id="formacao" class="fase">
+        <header class="fase-header">
+          <h2>
+            <i class="fa-solid fa-graduation-cap"></i> Fase 1 — Formação
+            Acadêmica
+          </h2>
+        </header>
+        <div id="listaFormacao" class="grid"></div>
+      </section>
+
+      <section id="experiencias" class="fase">
+        <header class="fase-header">
+          <h2>
+            <i class="fa-solid fa-briefcase"></i> Fase 2 — Experiências
+            Profissionais (Missões)
+          </h2>
+        </header>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-icon">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div class="timeline-content card">
+              <h4>Consultor de TI — Freelancer</h4>
+              <p class="muted">09/2025 – Atual</p>
+              <ul class="details">
+                <li>Mapeamento de processos e automação operacional.</li>
+                <li>
+                  Criação de sistemas e planilhas automatizadas para controle de
+                  vendas e contratos.
+                </li>
+                <li>
+                  Implantação de ferramentas digitais para gestão e comunicação.
+                </li>
+                <li>
+                  Desenvolvimento de rotinas automatizadas para relatórios e
+                  propostas.
+                </li>
+                <li>Treinamento e suporte técnico contínuo às equipes.</li>
+              </ul>
+              <button class="toggle-btn">
+                <i class="fa-solid fa-eye"></i> Ver mais detalhes
+              </button>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon"><i class="fa-solid fa-table"></i></div>
+            <div class="timeline-content card">
+              <h4>Criação de Planilhas Automatizadas — Freelancer</h4>
+              <p class="muted">05/2025 – Temporário</p>
+              <ul class="details">
+                <li>
+                  Dashboards e planilhas interativas com fórmulas avançadas.
+                </li>
+                <li>Integração de dados e automação de processos manuais.</li>
+                <li>
+                  Suporte e treinamento para uso eficiente das ferramentas
+                  criadas.
+                </li>
+              </ul>
+              <button class="toggle-btn">
+                <i class="fa-solid fa-eye"></i> Ver mais detalhes
+              </button>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon">
+              <i class="fa-solid fa-helmet-safety"></i>
+            </div>
+            <div class="timeline-content card">
+              <h4>Estagiário Administrativo — Construtora Reflora</h4>
+              <p class="muted">07/2023 – 09/2023</p>
+              <ul class="details">
+                <li>Suporte na coleta e análise de dados de projetos.</li>
+                <li>
+                  Criação e atualização de relatórios e planilhas de desempenho.
+                </li>
+                <li>Gestão de dados e manutenção de sistemas internos.</li>
+              </ul>
+              <button class="toggle-btn">
+                <i class="fa-solid fa-eye"></i> Ver mais detalhes
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projetos" class="fase">
+        <header class="fase-header">
+          <h2>
+            <i class="fa-solid fa-dragon"></i> Fase 3 — Projetos (Boss Battles)
+          </h2>
+        </header>
+
+        <div class="filtros" aria-label="Filtrar projetos por categoria">
+          <button class="btn-filtro btn-acao" data-categoria="todos">
+            <i class="fa-solid fa-layer-group"></i> Todos
+          </button>
+          <button class="btn-filtro" data-categoria="react">
+            <i class="fa-brands fa-react"></i> React
+          </button>
+          <button class="btn-filtro" data-categoria="javascript">
+            <i class="fa-brands fa-js"></i> JavaScript
+          </button>
+          <button class="btn-filtro" data-categoria="desafios">
+            <i class="fa-solid fa-trophy"></i> Desafios
+          </button>
+        </div>
+
+        <div id="listaProjetos" class="grid"></div>
+      </section>
+
+      <section id="skills" class="fase">
+        <header class="fase-header">
+          <h2>
+            <i class="fa-solid fa-sitemap"></i> Fase 4 — Árvore de Habilidades
+          </h2>
+        </header>
+        <div id="listaSkills" class="grid"></div>
+      </section>
+
+      <section id="contato" class="fase final fullscreen-fase">
+        <div class="card player-card final-card">
+          <header class="fase-header">
+            <h2>
+              <i class="fa-solid fa-flag-checkered"></i> Jornada Concluída
+            </h2>
+          </header>
+
+          <p class="bio">
+            Parabéns por chegar até aqui! Quer iniciar uma nova quest juntos?
+            Escolha seu canal de comunicação:
+          </p>
+
+          <div class="contact-buttons">
+            <a
+              href="https://wa.me/5512981718913"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn contact-btn whatsapp"
+              title="WhatsApp"
+            >
+              <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+
+            <a
+              href="https://github.com/tirolasca"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn contact-btn github"
+              title="GitHub"
+            >
+              <i class="fab fa-github"></i> GitHub
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/lucas-santostec/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn contact-btn linkedin"
+              title="LinkedIn"
+            >
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+
+            <a
+              href="mailto:lucasnascimento1245@gmail.com"
+              class="btn contact-btn email"
+              title="E-mail"
+            >
+              <i class="fa-solid fa-envelope"></i> E-mail
+            </a>
+          </div>
+
+          <button id="resetJornada" class="btn-reset">
+            <i class="fa-solid fa-rotate-left"></i> Resetar Jornada
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="index.html">
+            <img
+              src="img/LogoNome.png"
+              alt="Logo Lucas Santos"
+              class="footer-logo"
+            />
+          </a>
+          <p><span class="divisor">|</span>Todos os direitos reservados.</p>
+        </div>
       </div>
-    </section>
-
-    <!-- FASE 1 - FORMAÇÃO -->
-    <section id="formacao" class="fase">
-      <h2>
-        <i class="fa-solid fa-graduation-cap"></i>
-        Fase 1 — Formação Acadêmica
-      </h2>
-      <div id="listaFormacao" class="grid"></div>
-    </section>
-
-    <!-- FASE 2 - CURSOS -->
-    <section id="cursos" class="fase">
-      <h2>
-        <i class="fa-solid fa-scroll"></i>
-        Fase 2 — Cursos & Certificações
-      </h2>
-      <div id="listaCursos" class="grid"></div>
-    </section>
-
-    <!-- FASE 3 - PROJETOS -->
-    <section id="projetos" class="fase">
-      <h2>
-        <i class="fa-solid fa-dragon"></i>
-        Fase 3 — Projetos (Boss Battles)
-      </h2>
-
-      <div class="filtros">
-        <button data-categoria="todos">
-          <i class="fa-solid fa-layer-group"></i> Todos
-        </button>
-        <button data-categoria="web">
-          <i class="fa-solid fa-globe"></i> Web
-        </button>
-        <button data-categoria="frontend">
-          <i class="fa-solid fa-desktop"></i> Frontend
-        </button>
-        <button data-categoria="backend">
-          <i class="fa-solid fa-server"></i> Backend
-        </button>
-      </div>
-
-      <div id="listaProjetos" class="grid"></div>
-    </section>
-
-    <!-- FASE 4 - HABILIDADES -->
-    <section id="skills" class="fase">
-      <h2>
-        <i class="fa-solid fa-sitemap"></i>
-        Fase 4 — Árvore de Habilidades
-      </h2>
-      <div id="listaSkills" class="grid"></div>
-    </section>
-
-    <!-- TELA FINAL -->
-    <section id="contato" class="fase final">
-      <h2>
-        <i class="fa-solid fa-flag-checkered"></i>
-        Jornada Concluída
-      </h2>
-      <p>Obrigado por jogar! Vamos nos conectar:</p>
-
-      <div class="links">
-        <a href="#" target="_blank">
-          <i class="fa-brands fa-linkedin"></i> LinkedIn
-        </a>
-        <a href="#" target="_blank">
-          <i class="fa-brands fa-github"></i> GitHub
-        </a>
-        <a href="#" target="_blank">
-          <i class="fa-solid fa-briefcase"></i> Portfólio
-        </a>
-      </div>
-      <button id="resetJornada" class="btn-reset">
-        <i class="fa-solid fa-rotate-left"></i> Resetar Jornada
-      </button>
-    </section>
+    </footer>
 
     <script src="script.js"></script>
   </body>

@@ -1,131 +1,183 @@
 // =========================
-// ESTADO GLOBAL (ADICIONADO)
+// 1. ESTADO GLOBAL & DADOS
 // =========================
 const conquistasDesbloqueadas = new Set();
 const fasesVisitadas = new Set();
+const fases = [
+  "inicio",
+  "formacao",
+  "experiencias",
+  "projetos",
+  "skills",
+  "contato",
+];
 
-const fases = ["inicio", "formacao", "cursos", "projetos", "skills", "contato"];
-const barra = document.getElementById("barraProgresso");
+// Mock do array de conquistas (Adicionado pois faltava no original)
+const conquistas = [
+  { id: "inicio", texto: "A Jornada Começa!" },
+  { id: "boss", texto: "Primeiro Boss Derrotado!" },
+  { id: "skills", texto: "Habilidades Reconhecidas!" },
+  { id: "fim", texto: "Chegou ao fim da jornada!" },
+];
 
+const formacoes = [
+  {
+    curso: "Desenvolvimento de Software Multiplataforma",
+    instituicao: "FATEC",
+    periodo: "Em andamento",
+  },
+  {
+    curso: "Desenvolvimento de Sistemas",
+    instituicao: "ETEC",
+    periodo: "Concluído",
+  },
+  {
+    curso: "Redes de Computadores",
+    instituicao: "SENAC",
+    periodo: "Concluído",
+  },
+];
 
-// === LOCAL STORAGE ===
+const projetos = [
+  {
+    nome: "Planet Spotter",
+    descricao:
+      "Aplicação web desenvolvida no NASA Space Apps Challenge para visualização interativa de exoplanetas.",
+    tecnologias: ["HTML", "CSS", "JavaScript"],
+    categoria: "desafios",
+    link: "https://nasasjc.vercel.app",
+  },
+  {
+    nome: "Tempero da Casa",
+    descricao:
+      "Cardápio digital responsivo para visualização de pratos e navegação entre categorias.",
+    tecnologias: ["HTML", "CSS", "JavaScript"],
+    categoria: "javascript",
+    link: "https://temperodacasa.vercel.app",
+  },
+  {
+    nome: "TaskMaster",
+    descricao:
+      "Gerenciador de tarefas moderno com React, TypeScript, Vite, drag & drop e temas claros/escuros.",
+    tecnologias: ["React", "TypeScript", "Vite"],
+    categoria: "react",
+    link: "https://taskmasterbr.vercel.app",
+  },
+];
+
+// Substitua o seu array de skills atual por este:
+const skills = [
+  { nome: "HTML / CSS", nivel: 90, icone: "fa-brands fa-html5" },
+  { nome: "JavaScript", nivel: 85, icone: "fa-brands fa-js" },
+  { nome: "React", nivel: 80, icone: "fa-brands fa-react" },
+  { nome: "TypeScript", nivel: 75, icone: "fa-solid fa-file-code" },
+  { nome: "Python / Flask", nivel: 70, icone: "fa-brands fa-python" },
+  { nome: "Banco de Dados", nivel: 75, icone: "fa-solid fa-database" },
+  { nome: "Cloud & DevOps", nivel: 65, icone: "fa-solid fa-cloud" },
+  { nome: "Data Analytics", nivel: 70, icone: "fa-solid fa-chart-line" },
+  {
+    nome: "Redes & Infraestrutura",
+    nivel: 80,
+    icone: "fa-solid fa-network-wired",
+  },
+];
+
+// =========================
+// 2. LOCAL STORAGE
+// =========================
 const STORAGE_KEY = "portfolio_jornada";
 
 function salvarEstado() {
   const estado = {
     conquistas: Array.from(conquistasDesbloqueadas),
-    fases: Array.from(fasesVisitadas)
+    fases: Array.from(fasesVisitadas),
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(estado));
 }
 
 function carregarEstado() {
-  const estadoSalvo = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if (!estadoSalvo) return;
+  try {
+    const estadoSalvo = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!estadoSalvo) return;
 
-  estadoSalvo.conquistas.forEach(id => conquistasDesbloqueadas.add(id));
-  estadoSalvo.fases.forEach(id => fasesVisitadas.add(id));
+    estadoSalvo.conquistas?.forEach((id) => conquistasDesbloqueadas.add(id));
+    estadoSalvo.fases?.forEach((id) => fasesVisitadas.add(id));
 
-  renderConquistas();
-  atualizarProgresso();
+    renderConquistas();
+    atualizarProgressoFases();
+  } catch (error) {
+    console.error("Erro ao carregar estado salvo:", error);
+  }
 }
 
 // =========================
-// SAUDAÇÃO
+// 3. SAUDAÇÃO DINÂMICA
 // =========================
-const saudacao = document.getElementById("saudacao");
-const hora = new Date().getHours();
+function inicializarSaudacao() {
+  const saudacao = document.getElementById("saudacao");
+  if (!saudacao) return;
 
-if (hora < 12) {
-  saudacao.textContent = "🌅 Bom dia, aventureiro!";
-} else if (hora < 18) {
-  saudacao.textContent = "🌞 Boa tarde, aventureiro!";
-} else {
-  saudacao.textContent = "🌙 Boa noite, aventureiro!";
+  const hora = new Date().getHours();
+  if (hora < 12) saudacao.textContent = "🌅 Bom dia, aventureiro!";
+  else if (hora < 18) saudacao.textContent = "🌞 Boa tarde, aventureiro!";
+  else saudacao.textContent = "🌙 Boa noite, aventureiro!";
 }
 
 // =========================
-// DADOS
+// 4. RENDERIZAÇÕES DOM
 // =========================
-const formacoes = [
-  { curso: "Desenvolvimento de Sistemas", instituicao: "ETEC", periodo: "2023 - 2024" },
-  { curso: "Redes de Computadores", instituicao: "ETEC", periodo: "2021 - 2022" },
-];
+// Função simulada para evitar erros caso não exista no seu código
+function renderConquistas() {
+  // Lógica para renderizar os badges visuais de conquista no HTML
+  console.log("Conquistas atuais:", Array.from(conquistasDesbloqueadas));
+}
 
-const cursos = [
-  { nome: "HTML e CSS", horas: 40, ano: 2023 },
-  { nome: "JavaScript", horas: 60, ano: 2024 },
-  { nome: "Git e GitHub", horas: 20, ano: 2024 },
-];
-
-const projetos = [
-  {
-    nome: "TaskMaster",
-    descricao: "Gerenciador de tarefas com foco em produtividade.",
-    tecnologias: ["HTML", "CSS", "JavaScript"],
-    categoria: "web",
-    link: "https://taskmasterbr.vercel.app/",
-  },
-  {
-    nome: "Cápsula do Tempo",
-    descricao: "Aplicação para salvar mensagens e lembranças para o futuro.",
-    tecnologias: ["React", "Firebase"],
-    categoria: "frontend",
-    link: "#",
-  },
-];
-
-const skills = [
-  { nome: "HTML", nivel: 90 },
-  { nome: "CSS", nivel: 85 },
-  { nome: "JavaScript", nivel: 80 },
-  { nome: "Git", nivel: 70 },
-  { nome: "Comunicação", nivel: 85 },
-];
-
-// =========================
-// RENDERIZAÇÕES
-// =========================
 function renderFormacao() {
   const container = document.getElementById("listaFormacao");
-  container.innerHTML = "";
+  if (!container) return;
 
-  formacoes.forEach(f => {
-    container.innerHTML += `
-      <div class="card">
-        <h3>🎓 ${f.curso}</h3>
-        <p>${f.instituicao}</p>
-        <span>${f.periodo}</span>
-      </div>
-    `;
-  });
+  // Utilizando map e join para melhor performance no DOM
+  container.innerHTML = formacoes
+    .map(
+      (f) => `
+    <div class="card">
+      <h3>🎓 ${f.curso}</h3>
+      <p>${f.instituicao}</p>
+      <span>${f.periodo}</span>
+    </div>
+  `,
+    )
+    .join("");
 }
 
 function renderCursos() {
   const container = document.getElementById("listaCursos");
-  container.innerHTML = "";
+  if (!container) return;
 
-  cursos.forEach(curso => {
-    container.innerHTML += `
-      <div class="card">
-        <h3>📜 ${curso.nome}</h3>
-        <p>Carga horária: ${curso.horas}h</p>
-        <span>Ano: ${curso.ano}</span>
-      </div>
-    `;
-  });
+  container.innerHTML = cursos
+    .map(
+      (curso) => `
+    <div class="card">
+      <h3>📜 ${curso.nome}</h3>
+      <p>Carga horária: ${curso.horas}h</p>
+      <span>Ano: ${curso.ano}</span>
+    </div>
+  `,
+    )
+    .join("");
 }
 
-function renderProjetos(filtro = "todos") {
+function renderProjetos() {
+  // <--- Remova o argumento filtro daqui
   const container = document.getElementById("listaProjetos");
+  if (!container) return;
   container.innerHTML = "";
 
-  projetos.forEach(projeto => {
-    if (filtro !== "todos" && projeto.categoria !== filtro) return;
-
+  projetos.forEach((projeto) => {
     const card = document.createElement("div");
     card.className = "card boss";
     card.dataset.derrotado = "false";
+    card.dataset.categoria = projeto.categoria; // <--- NOVA LINHA: Salva a categoria no HTML do card
 
     card.innerHTML = `
       <h3>
@@ -141,6 +193,7 @@ function renderProjetos(filtro = "todos") {
 
     container.appendChild(card);
 
+    // Evento de "Derrotar o Boss"
     const botao = card.querySelector(".btn-batalha");
     const icon = card.querySelector(".boss-icon");
 
@@ -156,86 +209,64 @@ function renderProjetos(filtro = "todos") {
   });
 }
 
-function renderSkills() {
-  const container = document.getElementById("listaSkills");
-  container.innerHTML = "";
+function inicializarFiltrosProjetos() {
+  const botoes = document.querySelectorAll(".btn-filtro");
 
-  skills.forEach(skill => {
-    container.innerHTML += `
-      <div class="card skill">
-        <h3>${skill.nome}</h3>
-        <div class="barra">
-          <div class="progresso" style="width:${skill.nivel}%"></div>
-        </div>
-      </div>
-    `;
+  botoes.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      // 1. Remove o brilho de todos os botões e coloca só no clicado
+      botoes.forEach((b) => b.classList.remove("btn-acao"));
+      e.currentTarget.classList.add("btn-acao");
+
+      // 2. Descobre qual categoria foi clicada
+      const filtro = e.currentTarget.dataset.categoria;
+      const cards = document.querySelectorAll("#listaProjetos .card.boss");
+
+      // 3. Esconde ou mostra os chefões
+      cards.forEach((card) => {
+        if (filtro === "todos" || card.dataset.categoria === filtro) {
+          card.style.display = "block";
+          card.style.animation = "fadeIn 0.5s ease-in"; // Dá um efeito suave ao aparecer
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
   });
 }
 
-// =========================
-// INTERAÇÕES
-// =========================
-document.getElementById("startGame").addEventListener("click", () => {
-  document.getElementById("formacao").scrollIntoView({ behavior: "smooth" });
-  desbloquearConquista("inicio");
-});
+function renderSkills() {
+  const container = document.getElementById("listaSkills");
+  if (!container) return;
 
-// =========================
-// OBSERVERS
-// =========================
-document.querySelectorAll(".fase").forEach(fase => {
-  new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      fase.classList.add("visivel");
-      fasesVisitadas.add(fase.id);
-      atualizarProgresso();
-    }
-  }, { threshold: 0.2 }).observe(fase);
-});
-
-// Skills
-const skillSection = document.getElementById("skills");
-new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting) {
-    desbloquearConquista("skills");
-  }
-}, { threshold: 0.3 }).observe(skillSection);
-
-// Contato
-new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting) {
-    desbloquearConquista("fim");
-  }
-}).observe(document.getElementById("contato"));
-
-// =========================
-// PROGRESSO DA JORNADA
-// =========================
-const barraScroll = document.getElementById("barraProgresso");
-
-function progressoPorScroll() {
-  const scrollTop = window.scrollY;
-  const alturaTotal =
-    document.documentElement.scrollHeight - window.innerHeight;
-
-  const progresso = (scrollTop / alturaTotal) * 100;
-  barraScroll.style.width = `${progresso}%`;
+  container.innerHTML = skills
+    .map(
+      (skill) => `
+    <div class="card skill">
+      <div class="skill-header">
+        <i class="${skill.icone} skill-badge"></i>
+        <h3>${skill.nome}</h3>
+      </div>
+      <div class="barra">
+        <div class="progresso" style="width:${skill.nivel}%"></div>
+      </div>
+    </div>
+  `,
+    )
+    .join("");
 }
 
-window.addEventListener("scroll", progressoPorScroll);
-
 // =========================
-// NOTIFICAÇÃO
+// 5. SISTEMA DE JOGO & NOTIFICAÇÕES
 // =========================
-const notificacao = document.getElementById("notificacao");
-const textoNotificacao = document.getElementById("textoNotificacao");
-
 function mostrarNotificacao(id) {
-  const conquista = conquistas.find(c => c.id === id);
-  if (!conquista) return;
+  const notificacao = document.getElementById("notificacao");
+  const textoNotificacao = document.getElementById("textoNotificacao");
+  const conquista = conquistas.find((c) => c.id === id);
+
+  if (!conquista || !notificacao || !textoNotificacao) return;
 
   textoNotificacao.textContent = `Conquista desbloqueada: ${conquista.texto}`;
-
   notificacao.classList.remove("hidden");
   notificacao.classList.add("show");
 
@@ -243,14 +274,6 @@ function mostrarNotificacao(id) {
     notificacao.classList.remove("show");
   }, 3000);
 }
-
-// =========================
-// INIT
-// =========================
-renderFormacao();
-renderCursos();
-renderProjetos();
-renderSkills();
 
 function desbloquearConquista(id) {
   if (!conquistasDesbloqueadas.has(id)) {
@@ -261,55 +284,151 @@ function desbloquearConquista(id) {
   }
 }
 
-function atualizarProgresso() {
+function atualizarProgressoFases() {
+  const barraFases = document.getElementById("barraFases"); // Use um ID específico no HTML
+  if (!barraFases) return;
+
   const progresso = (fasesVisitadas.size / fases.length) * 100;
-  barra.style.width = `${progresso}%`;
+  barraFases.style.width = `${progresso}%`;
   salvarEstado();
 }
 
-carregarEstado();
+function progressoPorScroll() {
+  const barraScroll = document.getElementById("barraProgresso"); // ID exclusivo para o scroll
+  if (!barraScroll) return;
 
-const btnReset = document.getElementById("resetJornada");
+  const scrollTop = window.scrollY;
+  const alturaTotal =
+    document.documentElement.scrollHeight - window.innerHeight;
+  const progresso = (scrollTop / alturaTotal) * 100;
 
-btnReset.addEventListener("click", () => {
-  const confirmar = confirm(
-    "Tem certeza que deseja resetar toda a jornada?"
-  );
+  barraScroll.style.width = `${progresso}%`;
+}
 
-  if (!confirmar) return;
+// =========================
+// 6. OBSERVERS E EVENTOS
+// =========================
+function inicializarObservers() {
+  const baseObserverConfig = { threshold: 0.2 };
 
-  // Limpa localStorage
-  localStorage.removeItem(STORAGE_KEY);
+  // Observador de Fases
+  const faseObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const fase = entry.target;
+        fase.classList.add("visivel");
+        fasesVisitadas.add(fase.id);
+        atualizarProgressoFases();
 
-  // Reseta conquistas
-  conquistasDesbloqueadas.clear();
-  renderConquistas();
+        // Se já registrou a fase, não precisa observar mais (opcional para performance)
+        observer.unobserve(fase);
+      }
+    });
+  }, baseObserverConfig);
 
-  // Reseta fases visitadas
-  fasesVisitadas.clear();
-  atualizarProgresso();
+  document
+    .querySelectorAll(".fase")
+    .forEach((fase) => faseObserver.observe(fase));
 
-  // Reseta barra de progresso
-  const barra = document.getElementById("barraProgresso");
-  barra.style.width = "0%";
+  // Observadores de Conquistas Específicas
+  const skillSection = document.getElementById("skills");
+  if (skillSection) {
+    new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) desbloquearConquista("skills");
+      },
+      { threshold: 0.3 },
+    ).observe(skillSection);
+  }
 
-  // Reseta bosses
-  document.querySelectorAll(".card.boss").forEach(card => {
-    card.dataset.derrotado = "false";
+  const contatoSection = document.getElementById("contato");
+  if (contatoSection) {
+    new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) desbloquearConquista("fim");
+    }).observe(contatoSection);
+  }
+}
 
-    const icon = card.querySelector(".boss-icon");
-    if (icon) {
-      icon.classList.remove("fa-skull");
-      icon.classList.add("fa-dragon");
-      icon.style.color = "";
-    }
+function inicializarEventos() {
+  window.addEventListener("scroll", progressoPorScroll);
 
-    card.style.opacity = "1";
-    card.style.borderColor = "";
+  const btnStart = document.getElementById("startGame");
+  if (btnStart) {
+    btnStart.addEventListener("click", () => {
+      document
+        .getElementById("formacao")
+        ?.scrollIntoView({ behavior: "smooth" });
+      desbloquearConquista("inicio");
+    });
+  }
+
+  const btnReset = document.getElementById("resetJornada");
+  if (btnReset) {
+    btnReset.addEventListener("click", () => {
+      if (!confirm("Tem certeza que deseja resetar toda a jornada?")) return;
+
+      localStorage.removeItem(STORAGE_KEY);
+      conquistasDesbloqueadas.clear();
+      fasesVisitadas.clear();
+
+      renderConquistas();
+      atualizarProgressoFases();
+
+      const barraScroll = document.getElementById("barraProgresso");
+      if (barraScroll) barraScroll.style.width = "0%";
+
+      // Reseta os chefões visuais
+      document.querySelectorAll(".card.boss").forEach((card) => {
+        card.dataset.derrotado = "false";
+        const icon = card.querySelector(".boss-icon");
+        if (icon) {
+          icon.classList.remove("fa-skull");
+          icon.classList.add("fa-dragon");
+          icon.style.color = "";
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      alert("Jornada resetada com sucesso!");
+    });
+  }
+}
+
+function inicializarTimeline() {
+  const botoes = document.querySelectorAll(".toggle-btn");
+
+  botoes.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      // Pega a <ul> que está logo antes do botão clicado
+      const detalhes = e.currentTarget.previousElementSibling;
+      const icone = e.currentTarget.querySelector("i");
+
+      detalhes.classList.toggle("open");
+
+      if (detalhes.classList.contains("open")) {
+        e.currentTarget.innerHTML =
+          '<i class="fa-solid fa-eye-slash"></i> Esconder detalhes';
+        e.currentTarget.classList.add("btn-acao"); // Dá um brilho no botão
+      } else {
+        e.currentTarget.innerHTML =
+          '<i class="fa-solid fa-eye"></i> Ver mais detalhes';
+        e.currentTarget.classList.remove("btn-acao");
+      }
+    });
   });
+}
 
-  // Volta para o início
-  window.scrollTo({ top: 0, behavior: "smooth" });
-
-  alert("Jornada resetada com sucesso!");
+// =========================
+// 7. INICIALIZAÇÃO
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+  inicializarSaudacao();
+  renderFormacao();
+  renderProjetos();
+  renderSkills();
+  carregarEstado();
+  inicializarFiltrosProjetos();
+  inicializarObservers();
+  inicializarEventos();
+  inicializarTimeline();
 });
