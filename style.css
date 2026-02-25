@@ -1,18 +1,29 @@
+/* ==========================================
+   1. FONTES E VARIÁVEIS DE TEMA (ROOT)
+   ========================================== */
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Press+Start+2P&display=swap");
 
 :root {
+  /* Paleta Dark Mode Base */
   --bg-color: #0f172a;
   --surface-color: #1e293b;
   --surface-hover: #334155;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --accent-color: #10b981;
-  --boss-color: #ef4444;
-  --gold-color: #fbbf24;
+  
+  /* Cores de Ação / Gamificação */
+  --accent-color: #10b981; /* Progresso e Sucesso */
+  --boss-color: #ef4444;   /* Chefões e Perigo */
+  --gold-color: #fbbf24;   /* Conquistas e Destaques */
+  
+  /* Tipografia */
   --font-texto: "Fira Code", monospace;
   --font-titulo: "Press Start 2P", cursive;
 }
 
+/* ==========================================
+   2. RESET GERAL E SCROLLBAR
+   ========================================== */
 * {
   margin: 0;
   padding: 0;
@@ -31,6 +42,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Customização da Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -45,6 +57,63 @@ body {
   background: var(--accent-color);
 }
 
+/* Acessibilidade (Navegação por Teclado) */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px dashed var(--accent-color);
+  outline-offset: 4px;
+}
+
+/* ==========================================
+   3. ESTRUTURA E LAYOUT (GRIDS E FASES)
+   ========================================== */
+main {
+  margin-top: 100px;
+  padding: 0 2rem 4rem 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fase {
+  padding: 4rem 0;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fase.visivel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fase-header h2 {
+  font-family: var(--font-titulo);
+  font-size: 1.2rem;
+  color: var(--gold-color);
+  margin-bottom: 2rem;
+  border-bottom: 2px dashed var(--surface-hover);
+  padding-bottom: 1rem;
+  display: inline-block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.fullscreen-fase {
+  min-height: calc(100vh - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================
+   4. COMPONENTES PRINCIPAIS
+   ========================================== */
+/* --- HUD (Menu Superior) --- */
 .hud {
   position: fixed;
   top: 0;
@@ -87,6 +156,7 @@ body {
   color: var(--accent-color);
 }
 
+/* --- Barras de Progresso --- */
 .progresso-jornada {
   position: fixed;
   top: 0;
@@ -101,10 +171,208 @@ body {
   height: 100%;
   background: var(--accent-color);
   width: 0%;
-  transition: width 0.1s;
+  transition: width 0.1s ease-out;
   box-shadow: 0 0 10px var(--accent-color);
 }
 
+.progresso-fases-container {
+  height: 8px;
+  background: var(--bg-color);
+  border-radius: 4px;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+#barraFases {
+  height: 100%;
+  background: var(--gold-color);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+/* --- Botões Gerais --- */
+button,
+.btn-batalha,
+.btn-reset,
+.btn-toggle-tema {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border: 2px solid var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-family: var(--font-texto);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+button:hover,
+.btn-batalha:hover {
+  background: var(--text-primary);
+  color: var(--bg-color);
+  border-color: var(--text-primary);
+}
+
+.btn-acao {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.btn-acao:hover {
+  background: var(--accent-color);
+  color: var(--bg-color);
+  box-shadow: 0 0 10px var(--accent-color);
+}
+
+/* --- Cards Bases --- */
+.card {
+  background: var(--surface-color);
+  border: 2px solid var(--surface-hover);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-color);
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+}
+
+.card h3 {
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ==========================================
+   5. SISTEMAS DE JOGO (RPG ELEMENTS)
+   ========================================== */
+/* --- Player Avatar & Glitch Text --- */
+.player-card {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#inicio .player-card {
+  position: relative;
+}
+
+#inicio .player-card .avatar {
+  position: relative;
+  z-index: 2;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid var(--accent-color);
+  background-color: var(--surface-color);
+  margin-bottom: 1rem;
+  object-fit: cover;
+  transition: all 0.3s ease-in-out;
+}
+
+#inicio .player-card::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(1.5rem - 4px);
+  left: 50%;
+  width: 158px;
+  height: 158px;
+  border-radius: 50%;
+  background: conic-gradient(#0ff, #f0f, #0ff, #f0f, #0ff);
+  opacity: 0;
+  filter: blur(2px);
+  transition: opacity 0.3s ease-in-out;
+  transform: translateX(-50%);
+  will-change: transform; /* Performance */
+}
+
+#inicio .player-card:hover .avatar {
+  border-color: transparent;
+  transform: scale(1.02);
+}
+
+#inicio .player-card:hover::before {
+  opacity: 1;
+  animation: rotate-border 1.5s linear infinite;
+}
+
+@keyframes rotate-border {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  100% { transform: translateX(-50%) rotate(360deg); }
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-titulo);
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch-text::before {
+  left: 3px;
+  text-shadow: -2px 0 #0ff;
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -3px;
+  text-shadow: -2px 0 #f0f;
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.player-card:hover .glitch-text::before,
+.player-card:hover .glitch-text::after {
+  opacity: 1;
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip-path: inset(20% 0 80% 0); }
+  20% { clip-path: inset(60% 0 10% 0); }
+  40% { clip-path: inset(40% 0 50% 0); }
+  60% { clip-path: inset(80% 0 5% 0); }
+  80% { clip-path: inset(10% 0 70% 0); }
+  100% { clip-path: inset(30% 0 50% 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip-path: inset(10% 0 60% 0); }
+  20% { clip-path: inset(30% 0 20% 0); }
+  40% { clip-path: inset(70% 0 10% 0); }
+  60% { clip-path: inset(20% 0 50% 0); }
+  80% { clip-path: inset(50% 0 30% 0); }
+  100% { clip-path: inset(5% 0 80% 0); }
+}
+
+/* --- NPC System --- */
 .npc-container {
   position: fixed;
   bottom: 2rem;
@@ -128,10 +396,9 @@ body {
   cursor: pointer;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
   animation: float 3s ease-in-out infinite;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   overflow: hidden;
+  will-change: transform; /* Performance */
 }
 
 .npc-sprite:hover {
@@ -157,10 +424,7 @@ body {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease,
-    visibility 0.3s;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
 }
 
 .npc-balao.hidden {
@@ -196,17 +460,12 @@ body {
 }
 
 @keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
+/* --- Mini Mapa (Fast Travel) --- */
 .mini-mapa {
   position: fixed;
   left: 1.5rem;
@@ -265,175 +524,374 @@ body {
   transform: scale(1.1);
 }
 
-main {
-  margin-top: 100px;
-  padding: 0 2rem 4rem 2rem;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.fase {
-  padding: 4rem 0;
-  opacity: 0;
-  transform: translateY(40px);
-  transition:
-    opacity 0.8s ease-out,
-    transform 0.8s ease-out;
-}
-
-.fase.visivel {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.fase-header h2 {
-  font-family: var(--font-titulo);
-  font-size: 1.2rem;
-  color: var(--gold-color);
+/* --- Boss Battles (Projetos) --- */
+.filtros {
+  display: flex;
+  gap: 1rem;
   margin-bottom: 2rem;
-  border-bottom: 2px dashed var(--surface-hover);
-  padding-bottom: 1rem;
-  display: inline-block;
+  flex-wrap: wrap;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+.card.boss {
+  border-color: #7f1d1d;
 }
 
-#inicio .player-card {
+.card.boss:hover {
+  border-color: var(--boss-color);
+  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
+}
+
+.card.boss h3 {
+  color: var(--boss-color);
+}
+
+.card.boss[data-derrotado="true"] {
+  filter: grayscale(1);
+  opacity: 0.6;
+  border-color: var(--surface-hover);
+}
+
+.card.boss[data-derrotado="true"]:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Timeline (Experiências / Quest Log) --- */
+.timeline {
   position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
 }
 
-#inicio .player-card .avatar {
-  position: relative;
-  z-index: 2;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 4px solid var(--accent-color);
-  background-color: var(--surface-color);
-  margin-bottom: 1rem;
-  object-fit: cover;
-  transition: all 0.3s ease-in-out;
-}
-
-#inicio .player-card::before {
+.timeline::after {
   content: "";
   position: absolute;
-  z-index: 1;
-  top: calc(1.5rem - 4px);
+  width: 4px;
+  background-color: var(--surface-hover);
+  top: 0;
+  bottom: 0;
   left: 50%;
-  width: 158px;
-  height: 158px;
-  border-radius: 50%;
-  background: conic-gradient(#0ff, #f0f, #0ff, #f0f, #0ff);
-  opacity: 0;
-  filter: blur(2px);
-  transition: opacity 0.3s ease-in-out;
-  transform: translateX(-50%);
+  margin-left: -2px;
+  box-shadow: 0 0 8px var(--surface-hover);
 }
 
-#inicio .player-card:hover .avatar {
-  border-color: transparent;
-  transform: scale(1.02);
-}
-
-#inicio .player-card:hover::before {
-  opacity: 1;
-  animation: rotate-border 1.5s linear infinite;
-}
-
-@keyframes rotate-border {
-  0% {
-    transform: translateX(-50%) rotate(0deg);
-  }
-  100% {
-    transform: translateX(-50%) rotate(360deg);
-  }
-}
-
-.glitch-text {
+.timeline-item {
+  padding: 10px 40px;
   position: relative;
-  display: inline-block;
-  font-family: var(--font-titulo);
-  font-size: 1.5rem;
+  width: 50%;
+}
+
+.timeline-item:nth-child(odd) { left: 0; }
+.timeline-item:nth-child(even) { left: 50%; }
+
+.timeline-icon {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  right: -22px;
+  background-color: var(--bg-color);
+  border: 4px solid var(--accent-color);
+  border-radius: 50%;
+  top: 15px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--accent-color);
-  letter-spacing: 2px;
+  font-size: 1.2rem;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.timeline-item:nth-child(even) .timeline-icon {
+  left: -22px;
+}
+
+.timeline-content h4 {
+  color: var(--gold-color);
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-content .muted {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
   margin-bottom: 1rem;
 }
 
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
+.timeline-content .details {
+  display: none;
+  list-style-type: square;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.timeline-content .details.open {
+  display: block;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Habilidades (Skills) --- */
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.skill-header h3 {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+}
+
+.skill-badge {
+  font-size: 1.8rem;
+  color: var(--accent-color);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.card.skill:hover .skill-badge {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.skill .barra {
   width: 100%;
+  height: 12px;
+  background: var(--bg-color);
+  border-radius: 6px;
+  margin-top: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--surface-hover);
+}
+
+.skill .progresso {
   height: 100%;
-  background: transparent;
-  opacity: 0;
+  background: var(--accent-color);
+  border-radius: 6px;
+  transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.glitch-text::before {
-  left: 3px;
-  text-shadow: -2px 0 #0ff;
-  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+/* ==========================================
+   6. UI DO USUÁRIO (CONQUISTAS, LOOT E TOOLTIPS)
+   ========================================== */
+/* --- Painel Lateral (Conquistas) --- */
+.conquistas {
+  position: fixed;
+  right: 2rem;
+  top: 100px;
+  width: 250px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 2px solid var(--surface-hover);
+  padding: 1rem;
+  border-radius: 8px;
+  display: none;
+  z-index: 110;
 }
 
-.glitch-text::after {
-  left: -3px;
-  text-shadow: -2px 0 #f0f;
-  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+.conquistas h2 {
+  font-size: 1rem;
+  color: var(--gold-color);
+  margin-bottom: 1rem;
 }
 
-.player-card:hover .glitch-text::before,
-.player-card:hover .glitch-text::after {
+#listaConquistas {
+  list-style: none;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0;
+}
+
+.conquista-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  background: var(--surface-color);
+  border: 1px solid var(--surface-hover);
+  transition: all 0.3s;
+  font-size: 0.85rem;
+  font-family: var(--font-texto);
+}
+
+.conquista-item.desbloqueada {
+  border-color: var(--gold-color);
+  color: var(--gold-color);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.conquista-item.desbloqueada i {
+  color: var(--gold-color);
+  font-size: 1.1rem;
+  text-shadow: 0 0 5px var(--gold-color);
+}
+
+.conquista-item.bloqueada {
+  opacity: 0.6;
+  filter: grayscale(100%);
+  color: var(--text-secondary);
+}
+
+.conquista-item.bloqueada i {
+  color: var(--surface-hover);
+  font-size: 1.1rem;
+}
+
+.conquistas:hover .conquista-item.bloqueada {
+  opacity: 0.8;
+}
+
+/* --- Inventário e Itens --- */
+.inventario-container {
+  margin-top: 2rem;
+  border-top: 2px dashed var(--surface-hover);
+  padding-top: 1rem;
+}
+
+.inventario-slots {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.slot {
+  width: 45px;
+  height: 45px;
+  background: var(--bg-color);
+  border: 2px solid var(--surface-hover);
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--surface-hover);
+  font-size: 1.2rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slot.preenchido {
+  border-color: var(--gold-color);
+  color: var(--gold-color);
+  background: rgba(251, 191, 36, 0.1);
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+  transform: scale(1.1);
+}
+
+.loot-item {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0.15;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.loot-item:hover {
   opacity: 1;
+  color: var(--gold-color);
+  transform: scale(1.3) rotate(10deg);
+  text-shadow: 0 0 10px var(--gold-color);
 }
 
-@keyframes glitch-anim-1 {
-  0% {
-    clip-path: inset(20% 0 80% 0);
-  }
-  20% {
-    clip-path: inset(60% 0 10% 0);
-  }
-  40% {
-    clip-path: inset(40% 0 50% 0);
-  }
-  60% {
-    clip-path: inset(80% 0 5% 0);
-  }
-  80% {
-    clip-path: inset(10% 0 70% 0);
-  }
-  100% {
-    clip-path: inset(30% 0 50% 0);
-  }
+#loot-chave { top: 20px; left: 20px; }
+#loot-pergaminho { top: 10px; right: -40px; }
+#loot-pocao { bottom: 20px; right: 50px; }
+
+/* --- Tooltips (Dicas ao Passar o Mouse) --- */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
 }
 
-@keyframes glitch-anim-2 {
-  0% {
-    clip-path: inset(10% 0 60% 0);
-  }
-  20% {
-    clip-path: inset(30% 0 20% 0);
-  }
-  40% {
-    clip-path: inset(70% 0 10% 0);
-  }
-  60% {
-    clip-path: inset(20% 0 50% 0);
-  }
-  80% {
-    clip-path: inset(50% 0 30% 0);
-  }
-  100% {
-    clip-path: inset(5% 0 80% 0);
-  }
+[data-tooltip]::before,
+[data-tooltip]::after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  z-index: 999;
+  pointer-events: none;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  width: max-content;
+  max-width: 220px;
+  background: rgba(15, 23, 42, 0.95);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-color);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: var(--font-texto);
+  line-height: 1.4;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  right: 110%;
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+}
+
+[data-tooltip]::before {
+  content: "";
+  border: 6px solid transparent;
+  border-left-color: var(--accent-color);
+  right: calc(110% - 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* --- Popups e Notificações --- */
+.notificacao {
+  position: fixed;
+  bottom: 2rem;
+  right: -900px;
+  background: var(--surface-color);
+  border-left: 5px solid var(--gold-color);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 999;
+  transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.notificacao.show {
+  right: 2rem;
+}
+
+.notificacao i {
+  color: var(--gold-color);
+  font-size: 1.5rem;
 }
 
 .quest-overlay {
@@ -512,558 +970,9 @@ main {
   padding: 0.8rem 1.5rem;
 }
 
-.card {
-  background: var(--surface-color);
-  border: 2px solid var(--surface-hover);
-  border-radius: 8px;
-  padding: 1.5rem;
-  transition:
-    transform 0.3s,
-    border-color 0.3s,
-    box-shadow 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: var(--accent-color);
-  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
-}
-
-.card h3 {
-  color: var(--accent-color);
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.card p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
-}
-
-.player-card {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.player-card .avatar {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 4px solid var(--accent-color);
-  margin-bottom: 1rem;
-  object-fit: cover;
-}
-
-.card.boss {
-  border-color: #7f1d1d;
-}
-
-.card.boss:hover {
-  border-color: var(--boss-color);
-  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
-}
-
-.card.boss h3 {
-  color: var(--boss-color);
-}
-
-.card.boss[data-derrotado="true"] {
-  filter: grayscale(1);
-  opacity: 0.6;
-  border-color: var(--surface-hover);
-}
-.card.boss[data-derrotado="true"]:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.filtros {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-button,
-.btn-batalha,
-.btn-reset {
-  background: var(--surface-hover);
-  color: var(--text-primary);
-  border: 2px solid var(--text-secondary);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-family: var(--font-texto);
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-decoration: none;
-  display: inline-block;
-  margin-top: 1rem;
-}
-
-button:hover,
-.btn-batalha:hover {
-  background: var(--text-primary);
-  color: var(--bg-color);
-  border-color: var(--text-primary);
-}
-
-.btn-acao {
-  background: rgba(16, 185, 129, 0.1);
-  color: var(--accent-color);
-  border-color: var(--accent-color);
-}
-.btn-acao:hover {
-  background: var(--accent-color);
-  color: var(--bg-color);
-  box-shadow: 0 0 10px var(--accent-color);
-}
-
-.skill .barra {
-  width: 100%;
-  height: 12px;
-  background: var(--bg-color);
-  border-radius: 6px;
-  margin-top: 1rem;
-  overflow: hidden;
-  border: 1px solid var(--surface-hover);
-}
-
-.skill .progresso {
-  height: 100%;
-  background: var(--accent-color);
-  border-radius: 6px;
-  transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.timeline {
-  position: relative;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 0;
-}
-
-.timeline::after {
-  content: "";
-  position: absolute;
-  width: 4px;
-  background-color: var(--surface-hover);
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  margin-left: -2px;
-  box-shadow: 0 0 8px var(--surface-hover);
-}
-
-.timeline-item {
-  padding: 10px 40px;
-  position: relative;
-  width: 50%;
-}
-
-.timeline-item:nth-child(odd) {
-  left: 0;
-}
-.timeline-item:nth-child(even) {
-  left: 50%;
-}
-
-.timeline-icon {
-  position: absolute;
-  width: 45px;
-  height: 45px;
-  right: -22px;
-  background-color: var(--bg-color);
-  border: 4px solid var(--accent-color);
-  border-radius: 50%;
-  top: 15px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-color);
-  font-size: 1.2rem;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-}
-
-.timeline-item:nth-child(even) .timeline-icon {
-  left: -22px;
-}
-
-.timeline-content h4 {
-  color: var(--gold-color);
-  font-size: 1.1rem;
-  margin-bottom: 0.2rem;
-}
-
-.timeline-content .muted {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.timeline-content .details {
-  display: none;
-  list-style-type: square;
-  margin-left: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.timeline-content .details.open {
-  display: block;
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.conquistas {
-  position: fixed;
-  right: 2rem;
-  top: 100px;
-  width: 250px;
-  background: rgba(30, 41, 59, 0.8);
-  border: 2px solid var(--surface-hover);
-  padding: 1rem;
-  border-radius: 8px;
-  display: none;
-  z-index: 110;
-}
-
-.conquistas h2 {
-  font-size: 1rem;
-  color: var(--gold-color);
-  margin-bottom: 1rem;
-}
-
-#listaConquistas {
-  list-style: none;
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  padding: 0;
-}
-
-.conquista-item {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.6rem;
-  border-radius: 6px;
-  background: var(--surface-color);
-  border: 1px solid var(--surface-hover);
-  transition: all 0.3s;
-  font-size: 0.85rem;
-  font-family: var(--font-texto);
-}
-
-.conquista-item.desbloqueada {
-  border-color: var(--gold-color);
-  color: var(--gold-color);
-  box-shadow: 0 0 10px rgba(251, 191, 36, 0.2);
-  background: rgba(251, 191, 36, 0.1);
-}
-
-.conquista-item.desbloqueada i {
-  color: var(--gold-color);
-  font-size: 1.1rem;
-  text-shadow: 0 0 5px var(--gold-color);
-}
-
-.conquista-item.bloqueada {
-  opacity: 0.6;
-  filter: grayscale(100%);
-  color: var(--text-secondary);
-}
-
-.conquista-item.bloqueada i {
-  color: var(--surface-hover);
-  font-size: 1.1rem;
-}
-
-.conquistas:hover .conquista-item.bloqueada {
-  opacity: 0.8;
-}
-
-.progresso-fases-container {
-  height: 8px;
-  background: var(--bg-color);
-  border-radius: 4px;
-  margin-top: 1rem;
-  overflow: hidden;
-}
-
-#barraFases {
-  height: 100%;
-  background: var(--gold-color);
-  width: 0%;
-  transition: width 0.5s ease;
-}
-
-.notificacao {
-  position: fixed;
-  bottom: 2rem;
-  right: -900px;
-  background: var(--surface-color);
-  border-left: 5px solid var(--gold-color);
-  padding: 1rem 1.5rem;
-  border-radius: 4px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 999;
-  transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-.notificacao.show {
-  right: 2rem;
-}
-
-.notificacao i {
-  color: var(--gold-color);
-  font-size: 1.5rem;
-}
-
-.inventario-container {
-  margin-top: 2rem;
-  border-top: 2px dashed var(--surface-hover);
-  padding-top: 1rem;
-}
-
-.inventario-slots {
-  display: flex;
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.slot {
-  width: 45px;
-  height: 45px;
-  background: var(--bg-color);
-  border: 2px solid var(--surface-hover);
-  border-radius: 6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--surface-hover);
-  font-size: 1.2rem;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.slot.preenchido {
-  border-color: var(--gold-color);
-  color: var(--gold-color);
-  background: rgba(251, 191, 36, 0.1);
-  box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
-  transform: scale(1.1);
-}
-
-.loot-item {
-  position: absolute;
-  cursor: pointer;
-  opacity: 0.15;
-  font-size: 1.5rem;
-  color: var(--text-secondary);
-  transition: all 0.3s;
-  z-index: 10;
-}
-
-.loot-item:hover {
-  opacity: 1;
-  color: var(--gold-color);
-  transform: scale(1.3) rotate(10deg);
-  text-shadow: 0 0 10px var(--gold-color);
-}
-
-#loot-chave {
-  top: 20px;
-  left: 20px;
-}
-#loot-pergaminho {
-  top: 10px;
-  right: -40px;
-}
-#loot-pocao {
-  bottom: 20px;
-  right: 50px;
-}
-
-body.theme-gameboy {
-  --bg-color: #8bac0f;
-  --surface-color: #9bbc0f;
-  --surface-hover: #306230;
-  --text-primary: #0f380f;
-  --text-secondary: #306230;
-  --accent-color: #0f380f;
-  --boss-color: #0f380f;
-  --gold-color: #0f380f;
-  font-family: var(--font-titulo);
-}
-
-body.theme-gameboy .card {
-  border: 4px solid #0f380f;
-  border-radius: 0;
-  box-shadow: 4px 4px 0px #0f380f;
-}
-
-body.theme-gameboy .loot-item,
-body.theme-gameboy .slot {
-  display: none;
-}
-
-.btn-toggle-tema {
-  margin-top: 1rem;
-  width: 100%;
-  background: var(--surface-color);
-  color: var(--accent-color);
-  border: 2px solid var(--accent-color);
-  padding: 0.6rem;
-  border-radius: 4px;
-  font-family: var(--font-texto);
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.btn-toggle-tema:hover {
-  background: var(--accent-color);
-  color: var(--bg-color);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
-}
-
-.btn-toggle-tema.hidden {
-  display: none;
-}
-
-body.theme-gameboy .btn-toggle-tema {
-  background: #306230;
-  color: #9bbc0f;
-  border-color: #0f380f;
-}
-
-body.theme-gameboy .btn-toggle-tema:hover {
-  background: #0f380f;
-  color: #8bac0f;
-}
-
-[data-tooltip] {
-  position: relative;
-  cursor: help;
-}
-
-[data-tooltip]::before,
-[data-tooltip]::after {
-  position: absolute;
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease,
-    transform 0.3s ease;
-  z-index: 999;
-  pointer-events: none;
-}
-
-[data-tooltip]::after {
-  content: attr(data-tooltip);
-  width: max-content;
-  max-width: 220px;
-  background: rgba(15, 23, 42, 0.95);
-  color: var(--text-primary);
-  border: 1px solid var(--accent-color);
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-family: var(--font-texto);
-  line-height: 1.4;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-  right: 110%;
-  top: 50%;
-  transform: translateY(-50%) translateX(10px);
-}
-
-[data-tooltip]::before {
-  content: "";
-  border: 6px solid transparent;
-  border-left-color: var(--accent-color);
-  right: calc(110% - 12px);
-  top: 50%;
-  transform: translateY(-50%) translateX(10px);
-}
-
-[data-tooltip]:hover::before,
-[data-tooltip]:hover::after {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
-}
-
-body.theme-gameboy [data-tooltip]::after {
-  background: #0f380f;
-  color: #8bac0f;
-  border-color: #9bbc0f;
-  border-radius: 0;
-}
-body.theme-gameboy [data-tooltip]::before {
-  border-left-color: #9bbc0f;
-}
-
-.skill-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.skill-header h3 {
-  margin-bottom: 0;
-  font-size: 1.1rem;
-}
-
-.skill-badge {
-  font-size: 1.8rem;
-  color: var(--accent-color);
-  background: rgba(16, 185, 129, 0.1);
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid var(--accent-color);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-}
-
-.card.skill:hover .skill-badge {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
-  background: rgba(16, 185, 129, 0.2);
-}
-
-.fullscreen-fase {
-  min-height: calc(100vh - 100px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+/* ==========================================
+   7. TELA FINAL E FOOTER
+   ========================================== */
 .final-card {
   text-align: center;
   max-width: 700px;
@@ -1186,6 +1095,66 @@ body.theme-gameboy [data-tooltip]::before {
   color: var(--surface-hover);
 }
 
+/* ==========================================
+   8. TEMA SECRETO (GAMEBOY 8-BITS)
+   ========================================== */
+body.theme-gameboy {
+  --bg-color: #8bac0f;
+  --surface-color: #9bbc0f;
+  --surface-hover: #306230;
+  --text-primary: #0f380f;
+  --text-secondary: #306230;
+  --accent-color: #0f380f;
+  --boss-color: #0f380f;
+  --gold-color: #0f380f;
+  font-family: var(--font-titulo);
+}
+
+body.theme-gameboy ::-webkit-scrollbar-thumb {
+  background: #306230;
+}
+
+body.theme-gameboy .card {
+  border: 4px solid #0f380f;
+  border-radius: 0;
+  box-shadow: 4px 4px 0px #0f380f;
+}
+
+body.theme-gameboy .loot-item,
+body.theme-gameboy .slot {
+  display: none;
+}
+
+.btn-toggle-tema.hidden {
+  display: none;
+}
+
+body.theme-gameboy .btn-toggle-tema {
+  background: #306230;
+  color: #9bbc0f;
+  border-color: #0f380f;
+}
+
+body.theme-gameboy .btn-toggle-tema:hover {
+  background: #0f380f;
+  color: #8bac0f;
+}
+
+body.theme-gameboy [data-tooltip]::after {
+  background: #0f380f;
+  color: #8bac0f;
+  border-color: #9bbc0f;
+  border-radius: 0;
+}
+
+body.theme-gameboy [data-tooltip]::before {
+  border-left-color: #9bbc0f;
+}
+
+/* ==========================================
+   9. RESPONSIVIDADE (MEDIA QUERIES)
+   ========================================== */
+/* Telas Grandes (Mostra o Painel de Conquistas) */
 @media (min-width: 1300px) {
   .conquistas {
     display: block;
@@ -1195,6 +1164,17 @@ body.theme-gameboy [data-tooltip]::before {
   }
 }
 
+/* Telas Médias (Tablets) */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mini-mapa {
+    display: none;
+  }
+}
+
+/* Telas Pequenas (Celulares) */
 @media (max-width: 768px) {
   .hud {
     flex-direction: column;
@@ -1228,12 +1208,14 @@ body.theme-gameboy [data-tooltip]::before {
   .timeline::after {
     left: 31px;
   }
+  
   .timeline-item {
     width: 100%;
     padding-left: 70px;
     padding-right: 0;
     left: 0 !important;
   }
+  
   .timeline-item:nth-child(even) .timeline-icon,
   .timeline-item:nth-child(odd) .timeline-icon {
     left: 8px;
@@ -1242,14 +1224,17 @@ body.theme-gameboy [data-tooltip]::before {
   .contact-buttons {
     flex-direction: column;
   }
+  
   .contact-btn {
     justify-content: center;
   }
+  
   .footer-brand {
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
   }
+  
   .divisor {
     display: none;
   }
@@ -1258,6 +1243,7 @@ body.theme-gameboy [data-tooltip]::before {
     bottom: 1rem;
     left: 1rem;
   }
+  
   .npc-sprite {
     width: 50px;
     height: 50px;
