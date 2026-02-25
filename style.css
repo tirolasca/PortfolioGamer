@@ -1,24 +1,18 @@
-/* =========================
-   1. IMPORTAÇÕES E VARIÁVEIS
-   ========================= */
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Press+Start+2P&display=swap");
 
 :root {
-  --bg-color: #0f172a; /* Slate 900 */
-  --surface-color: #1e293b; /* Slate 800 */
-  --surface-hover: #334155; /* Slate 700 */
+  --bg-color: #0f172a;
+  --surface-color: #1e293b;
+  --surface-hover: #334155;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  --accent-color: #10b981; /* Verde esmeralda (Exp/Progresso) */
-  --boss-color: #ef4444; /* Vermelho (Projetos) */
-  --gold-color: #fbbf24; /* Dourado (Conquistas) */
+  --accent-color: #10b981;
+  --boss-color: #ef4444;
+  --gold-color: #fbbf24;
   --font-texto: "Fira Code", monospace;
   --font-titulo: "Press Start 2P", cursive;
 }
 
-/* =========================
-   2. RESET E BASE
-   ========================= */
 * {
   margin: 0;
   padding: 0;
@@ -37,7 +31,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -52,9 +45,6 @@ body {
   background: var(--accent-color);
 }
 
-/* =========================
-   3. HUD / HEADER (MENU)
-   ========================= */
 .hud {
   position: fixed;
   top: 0;
@@ -97,9 +87,6 @@ body {
   color: var(--accent-color);
 }
 
-/* =========================
-   4. BARRAS DE PROGRESSO
-   ========================= */
 .progresso-jornada {
   position: fixed;
   top: 0;
@@ -118,13 +105,10 @@ body {
   box-shadow: 0 0 10px var(--accent-color);
 }
 
-/* =========================
-   NPC / GUIA DA JORNADA
-   ========================= */
 .npc-container {
   position: fixed;
   bottom: 2rem;
-  left: 2rem; /* Fica no canto esquerdo para não brigar com a notificação na direita */
+  left: 2rem;
   z-index: 998;
   display: flex;
   flex-direction: column;
@@ -132,11 +116,10 @@ body {
   gap: 1rem;
 }
 
-/* O container do personagem */
 .npc-sprite {
-  width: 70px; /* Aumentei um pouco para a imagem respirar */
+  width: 70px;
   height: 70px;
-  background: rgba(30, 41, 59, 0.8); /* Fundo um pouco mais escuro/transparente */
+  background: rgba(30, 41, 59, 0.8);
   border: 2px solid var(--accent-color);
   border-radius: 50%;
   display: flex;
@@ -145,8 +128,10 @@ body {
   cursor: pointer;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
   animation: float 3s ease-in-out infinite;
-  transition: transform 0.2s, box-shadow 0.2s;
-  overflow: hidden; /* Garante que a imagem não saia das bordas redondas */
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  overflow: hidden;
 }
 
 .npc-sprite:hover {
@@ -154,22 +139,17 @@ body {
   box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
 }
 
-/* A Mágica do Pixel Art no CSS */
 .npc-img {
-  width: 80%; /* Ajuste essa porcentagem dependendo do tamanho da sua imagem */
+  width: 80%;
   height: auto;
   object-fit: contain;
-  
-  /* ESTA É A PROPRIEDADE MÁGICA: */
-  image-rendering: pixelated; 
-  /* Faz com que o navegador não embaçe a imagem ao aumentar o tamanho, 
-     mantendo os quadradinhos do pixel art perfeitos! */
+  image-rendering: pixelated;
 }
-/* Balão de Fala estilo RPG */
+
 .npc-balao {
   background: rgba(15, 23, 42, 0.95);
   border: 2px solid var(--text-primary);
-  border-radius: 8px 8px 8px 0; /* Ponta do balão apontando para o NPC */
+  border-radius: 8px 8px 8px 0;
   padding: 1rem 2rem 1rem 1rem;
   max-width: 250px;
   box-shadow: 4px 4px 0px var(--accent-color);
@@ -177,14 +157,17 @@ body {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s;
 }
 
 .npc-balao.hidden {
   opacity: 0;
   visibility: hidden;
-  pointer-events: none; /* Impede que o jogador clique num balão invisível */
-  transform: translateY(15px); /* Faz ele descer um pouquinho ao sumir */
+  pointer-events: none;
+  transform: translateY(15px);
 }
 
 .npc-balao p {
@@ -212,16 +195,18 @@ body {
   color: #f87171;
 }
 
-/* Animação do NPC Flutuando */
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
-/* =========================
-   MINI MAPA (FAST TRAVEL)
-   ========================= */
 .mini-mapa {
   position: fixed;
   left: 1.5rem;
@@ -234,7 +219,6 @@ body {
   gap: 1.5rem;
 }
 
-/* Linha de fundo que conecta os pontos */
 .mapa-linha {
   position: absolute;
   top: 10px;
@@ -245,7 +229,6 @@ body {
   border-radius: 2px;
 }
 
-/* Os nós (pontos do mapa) */
 .mapa-ponto {
   width: 40px;
   height: 40px;
@@ -262,21 +245,18 @@ body {
   cursor: pointer;
 }
 
-/* Hover no ponto */
 .mapa-ponto:hover {
   transform: scale(1.2);
   border-color: var(--accent-color);
   color: var(--accent-color);
 }
 
-/* Estado: Fase já visitada (Explorada) */
 .mapa-ponto.explorado {
   border-color: var(--accent-color);
   color: var(--accent-color);
   background-color: rgba(16, 185, 129, 0.1);
 }
 
-/* Estado: Fase atual onde o jogador está (Brilho Neon) */
 .mapa-ponto.ativo {
   border-color: var(--gold-color);
   color: var(--gold-color);
@@ -285,9 +265,6 @@ body {
   transform: scale(1.1);
 }
 
-/* =========================
-   5. LAYOUT PRINCIPAL E GRIDS
-   ========================= */
 main {
   margin-top: 100px;
   padding: 0 2rem 4rem 2rem;
@@ -298,7 +275,6 @@ main {
 
 .fase {
   padding: 4rem 0;
-  /* Animação Inicial: Oculto e um pouco para baixo */
   opacity: 0;
   transform: translateY(40px);
   transition:
@@ -306,7 +282,6 @@ main {
     transform 0.8s ease-out;
 }
 
-/* Ativado pelo Intersection Observer no JS */
 .fase.visivel {
   opacity: 1;
   transform: translateY(0);
@@ -328,37 +303,68 @@ main {
   gap: 2rem;
 }
 
-/* =========================
-   EFEITO GLITCH (CYBERPUNK)
-   ========================= */
-
-/* 1. Tremor e Brilho Neon no Avatar */
-.player-card .avatar {
-  transition: all 0.2s ease-in-out;
+#inicio .player-card {
+  position: relative;
 }
 
-.player-card:hover .avatar {
-  /* Animação de tremor no card quando o mouse passa */
-  animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  /* Borda neon Magenta e Ciano */
-  box-shadow:
-    -3px 0 #0ff,
-    3px 0 #f0f;
-  border-color: var(--surface-color);
+#inicio .player-card .avatar {
+  position: relative;
+  z-index: 2;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid var(--accent-color);
+  background-color: var(--surface-color);
+  margin-bottom: 1rem;
+  object-fit: cover;
+  transition: all 0.3s ease-in-out;
 }
 
-/* 2. Configuração Base do Texto Glitch */
+#inicio .player-card::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: calc(1.5rem - 4px);
+  left: 50%;
+  width: 158px;
+  height: 158px;
+  border-radius: 50%;
+  background: conic-gradient(#0ff, #f0f, #0ff, #f0f, #0ff);
+  opacity: 0;
+  filter: blur(2px);
+  transition: opacity 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+#inicio .player-card:hover .avatar {
+  border-color: transparent;
+  transform: scale(1.02);
+}
+
+#inicio .player-card:hover::before {
+  opacity: 1;
+  animation: rotate-border 1.5s linear infinite;
+}
+
+@keyframes rotate-border {
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
 .glitch-text {
   position: relative;
   display: inline-block;
-  font-family: var(--font-titulo); /* Usa a fonte 8-bits */
+  font-family: var(--font-titulo);
   font-size: 1.5rem;
   color: var(--accent-color);
   letter-spacing: 2px;
   margin-bottom: 1rem;
 }
 
-/* Pseudo-elementos que criam as "cópias" do texto para a falha */
 .glitch-text::before,
 .glitch-text::after {
   content: attr(data-text);
@@ -368,52 +374,26 @@ main {
   width: 100%;
   height: 100%;
   background: transparent;
-  opacity: 0; /* Escondido por padrão */
+  opacity: 0;
 }
 
-/* Camada Ciano (Fatia de cima) */
 .glitch-text::before {
   left: 3px;
   text-shadow: -2px 0 #0ff;
   animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
 
-/* Camada Magenta (Fatia de baixo) */
 .glitch-text::after {
   left: -3px;
   text-shadow: -2px 0 #f0f;
   animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
 
-/* Ativa o glitch apenas quando passa o mouse no card do jogador */
 .player-card:hover .glitch-text::before,
 .player-card:hover .glitch-text::after {
   opacity: 1;
 }
 
-/* 3. Keyframes (A matemática do Glitch) */
-@keyframes glitch-skew {
-  0% {
-    transform: skew(0deg);
-  }
-  20% {
-    transform: skew(-5deg);
-  }
-  40% {
-    transform: skew(5deg);
-  }
-  60% {
-    transform: skew(-2deg);
-  }
-  80% {
-    transform: skew(2deg);
-  }
-  100% {
-    transform: skew(0deg);
-  }
-}
-
-/* Usa clip-path para "fatiar" o texto de forma aleatória */
 @keyframes glitch-anim-1 {
   0% {
     clip-path: inset(20% 0 80% 0);
@@ -456,9 +436,82 @@ main {
   }
 }
 
-/* =========================
-   6. CARDS (CARTÕES)
-   ========================= */
+.quest-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.4s ease;
+}
+
+.quest-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.quest-box {
+  background: var(--surface-color);
+  border: 2px solid var(--gold-color);
+  padding: 2.5rem 2rem;
+  border-radius: 8px;
+  max-width: 450px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+  transform: scale(1) translateY(0);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.quest-overlay.hidden .quest-box {
+  transform: scale(0.8) translateY(30px);
+}
+
+.quest-box h2 {
+  color: var(--gold-color);
+  margin-bottom: 1rem;
+  font-family: var(--font-titulo);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.quest-items {
+  list-style: none;
+  margin: 1.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  text-align: left;
+  display: inline-block;
+}
+
+.quest-items li {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.quest-items i {
+  color: var(--accent-color);
+  width: 30px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.quest-box button {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+}
+
 .card {
   background: var(--surface-color);
   border: 2px solid var(--surface-hover);
@@ -488,7 +541,6 @@ main {
   margin-bottom: 0.5rem;
 }
 
-/* Estilo específico para a Tela Inicial */
 .player-card {
   text-align: center;
   max-width: 600px;
@@ -504,11 +556,8 @@ main {
   object-fit: cover;
 }
 
-/* =========================
-   7. PROJETOS (BOSS BATTLES)
-   ========================= */
 .card.boss {
-  border-color: #7f1d1d; /* Vermelho escuro */
+  border-color: #7f1d1d;
 }
 
 .card.boss:hover {
@@ -520,7 +569,6 @@ main {
   color: var(--boss-color);
 }
 
-/* Efeito de Boss Derrotado via atributo Data do JS */
 .card.boss[data-derrotado="true"] {
   filter: grayscale(1);
   opacity: 0.6;
@@ -538,9 +586,6 @@ main {
   flex-wrap: wrap;
 }
 
-/* =========================
-   8. BOTÕES
-   ========================= */
 button,
 .btn-batalha,
 .btn-reset {
@@ -576,9 +621,6 @@ button:hover,
   box-shadow: 0 0 10px var(--accent-color);
 }
 
-/* =========================
-   9. HABILIDADES (SKILLS)
-   ========================= */
 .skill .barra {
   width: 100%;
   height: 12px;
@@ -593,13 +635,9 @@ button:hover,
   height: 100%;
   background: var(--accent-color);
   border-radius: 6px;
-  /* Animação suave ao carregar o width no JS */
   transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* =========================
-   TIMELINE (EXPERIÊNCIAS / QUEST LOG)
-   ========================= */
 .timeline {
   position: relative;
   max-width: 900px;
@@ -607,7 +645,6 @@ button:hover,
   padding: 2rem 0;
 }
 
-/* Linha central brilhante */
 .timeline::after {
   content: "";
   position: absolute;
@@ -667,7 +704,6 @@ button:hover,
   margin-bottom: 1rem;
 }
 
-/* Esconde a lista por padrão para o botão funcionar */
 .timeline-content .details {
   display: none;
   list-style-type: square;
@@ -676,7 +712,6 @@ button:hover,
   color: var(--text-primary);
 }
 
-/* Classe ativada pelo JS */
 .timeline-content .details.open {
   display: block;
   animation: fadeIn 0.3s ease-in;
@@ -693,9 +728,6 @@ button:hover,
   }
 }
 
-/* =========================
-   10. ASIDE (CONQUISTAS) E NOTIFICAÇÃO
-   ========================= */
 .conquistas {
   position: fixed;
   right: 2rem;
@@ -705,7 +737,8 @@ button:hover,
   border: 2px solid var(--surface-hover);
   padding: 1rem;
   border-radius: 8px;
-  display: none; /* Escondido por padrão, mostramos via Media Query */
+  display: none;
+  z-index: 110;
 }
 
 .conquistas h2 {
@@ -714,9 +747,6 @@ button:hover,
   margin-bottom: 1rem;
 }
 
-/* =========================
-   PAINEL DE CONQUISTAS (LISTA LATERAL)
-   ========================= */
 #listaConquistas {
   list-style: none;
   margin-top: 1rem;
@@ -726,7 +756,6 @@ button:hover,
   padding: 0;
 }
 
-/* Base de cada item da lista */
 .conquista-item {
   display: flex;
   align-items: center;
@@ -740,7 +769,6 @@ button:hover,
   font-family: var(--font-texto);
 }
 
-/* Estado 1: CONQUISTA DESBLOQUEADA (Brilhante) */
 .conquista-item.desbloqueada {
   border-color: var(--gold-color);
   color: var(--gold-color);
@@ -754,7 +782,6 @@ button:hover,
   text-shadow: 0 0 5px var(--gold-color);
 }
 
-/* Estado 2: CONQUISTA BLOQUEADA (Cinza e com Cadeado) */
 .conquista-item.bloqueada {
   opacity: 0.6;
   filter: grayscale(100%);
@@ -766,9 +793,8 @@ button:hover,
   font-size: 1.1rem;
 }
 
-/* Interação ao passar o mouse por cima do painel */
 .conquistas:hover .conquista-item.bloqueada {
-  opacity: 0.8; /* Dá uma leve clareada pra incentivar o clique */
+  opacity: 0.8;
 }
 
 .progresso-fases-container {
@@ -786,11 +812,10 @@ button:hover,
   transition: width 0.5s ease;
 }
 
-/* Toast de Notificação */
 .notificacao {
   position: fixed;
   bottom: 2rem;
-  right: -900px; /* Escondido fora da tela */
+  right: -900px;
   background: var(--surface-color);
   border-left: 5px solid var(--gold-color);
   padding: 1rem 1.5rem;
@@ -812,9 +837,6 @@ button:hover,
   font-size: 1.5rem;
 }
 
-/* =========================
-   INVENTÁRIO E LOOT ESCONDIDO
-   ========================= */
 .inventario-container {
   margin-top: 2rem;
   border-top: 2px dashed var(--surface-hover);
@@ -849,11 +871,10 @@ button:hover,
   transform: scale(1.1);
 }
 
-/* Itens escondidos (Loot) */
 .loot-item {
   position: absolute;
   cursor: pointer;
-  opacity: 0.15; /* Quase invisível */
+  opacity: 0.15;
   font-size: 1.5rem;
   color: var(--text-secondary);
   transition: all 0.3s;
@@ -867,16 +888,20 @@ button:hover,
   text-shadow: 0 0 10px var(--gold-color);
 }
 
-/* Posições dos itens */
-#loot-chave { top: 20px; left:20px; }
-#loot-pergaminho { top: 10px; right: -40px; }
-#loot-pocao { bottom: 20px; right: 50px; }
+#loot-chave {
+  top: 20px;
+  left: 20px;
+}
+#loot-pergaminho {
+  top: 10px;
+  right: -40px;
+}
+#loot-pocao {
+  bottom: 20px;
+  right: 50px;
+}
 
-/* =========================
-   TEMA SECRETO: GAMEBOY RETRO
-   ========================= */
 body.theme-gameboy {
-  /* Substitui as variáveis de cor para a paleta clássica do Gameboy */
   --bg-color: #8bac0f;
   --surface-color: #9bbc0f;
   --surface-hover: #306230;
@@ -885,23 +910,20 @@ body.theme-gameboy {
   --accent-color: #0f380f;
   --boss-color: #0f380f;
   --gold-color: #0f380f;
-  font-family: var(--font-titulo); /* Força a fonte pixelada em tudo! */
+  font-family: var(--font-titulo);
 }
 
 body.theme-gameboy .card {
   border: 4px solid #0f380f;
-  border-radius: 0; /* Tira os cantos arredondados para ficar mais retro */
+  border-radius: 0;
   box-shadow: 4px 4px 0px #0f380f;
 }
 
-body.theme-gameboy .loot-item, 
+body.theme-gameboy .loot-item,
 body.theme-gameboy .slot {
-  display: none; /* Esconde o inventário quando o tema ativa */
+  display: none;
 }
 
-/* =========================
-   BOTÃO DE ALTERNAR TEMA 8-BITS
-   ========================= */
 .btn-toggle-tema {
   margin-top: 1rem;
   width: 100%;
@@ -926,10 +948,9 @@ body.theme-gameboy .slot {
   display: none;
 }
 
-/* Quando o modo Gameboy estiver ativo, o botão se adapta às cores retro */
 body.theme-gameboy .btn-toggle-tema {
-  background: #306230; /* Fundo escuro do Gameboy */
-  color: #9bbc0f; /* Texto claro */
+  background: #306230;
+  color: #9bbc0f;
   border-color: #0f380f;
 }
 
@@ -938,26 +959,24 @@ body.theme-gameboy .btn-toggle-tema:hover {
   color: #8bac0f;
 }
 
-/* =========================
-   TOOLTIPS (CAIXAS DE INFORMAÇÃO)
-   ========================= */
 [data-tooltip] {
   position: relative;
   cursor: help;
 }
 
-/* O balão e a setinha invisíveis por padrão */
 [data-tooltip]::before,
 [data-tooltip]::after {
   position: absolute;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-  z-index: 100;
-  pointer-events: none; /* Ignora cliques no tooltip */
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease;
+  z-index: 999;
+  pointer-events: none;
 }
 
-/* A Caixa de Texto */
 [data-tooltip]::after {
   content: attr(data-tooltip);
   width: max-content;
@@ -970,25 +989,21 @@ body.theme-gameboy .btn-toggle-tema:hover {
   font-size: 0.75rem;
   font-family: var(--font-texto);
   line-height: 1.4;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-  
-  /* Posição: Aparece à esquerda do elemento */
-  right: 110%; 
-  top: 50%;
-  transform: translateY(-50%) translateX(10px); 
-}
-
-/* A Setinha apontando pro elemento */
-[data-tooltip]::before {
-  content: '';
-  border: 6px solid transparent;
-  border-left-color: var(--accent-color);
-  right: calc(110% - 12px); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  right: 110%;
   top: 50%;
   transform: translateY(-50%) translateX(10px);
 }
 
-/* Efeito ao passar o mouse: Torna visível e desliza pra posição */
+[data-tooltip]::before {
+  content: "";
+  border: 6px solid transparent;
+  border-left-color: var(--accent-color);
+  right: calc(110% - 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(10px);
+}
+
 [data-tooltip]:hover::before,
 [data-tooltip]:hover::after {
   visibility: visible;
@@ -996,7 +1011,6 @@ body.theme-gameboy .btn-toggle-tema:hover {
   transform: translateY(-50%) translateX(0);
 }
 
-/* Ajuste no modo 8-bits */
 body.theme-gameboy [data-tooltip]::after {
   background: #0f380f;
   color: #8bac0f;
@@ -1007,9 +1021,6 @@ body.theme-gameboy [data-tooltip]::before {
   border-left-color: #9bbc0f;
 }
 
-/* =========================
-   HABILIDADES (SKILLS E BADGES)
-   ========================= */
 .skill-header {
   display: flex;
   align-items: center;
@@ -1017,7 +1028,6 @@ body.theme-gameboy [data-tooltip]::before {
   margin-bottom: 0.5rem;
 }
 
-/* Remove a margem padrão do h3 para alinhar com o ícone */
 .skill-header h3 {
   margin-bottom: 0;
   font-size: 1.1rem;
@@ -1041,17 +1051,12 @@ body.theme-gameboy [data-tooltip]::before {
   height: 50px;
 }
 
-/* Efeito ao passar o mouse por cima da habilidade */
 .card.skill:hover .skill-badge {
   transform: scale(1.1) rotate(5deg);
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
   background: rgba(16, 185, 129, 0.2);
 }
 
-/* =========================
-   CONTATO / TELA FINAL (QUEST COMPLETE)
-   ========================= */
-/* Faz a seção ocupar a tela inteira, subtraindo o espaço do Header */
 .fullscreen-fase {
   min-height: calc(100vh - 100px);
   display: flex;
@@ -1069,7 +1074,7 @@ body.theme-gameboy [data-tooltip]::before {
 }
 
 .final-card .fase-header h2 {
-  border-bottom: none; /* Remove a linha pontilhada para ficar mais limpo */
+  border-bottom: none;
   margin-bottom: 1rem;
 }
 
@@ -1081,7 +1086,6 @@ body.theme-gameboy [data-tooltip]::before {
   margin: 2.5rem 0;
 }
 
-/* Estilo Base dos Botões de Contato */
 .contact-btn {
   display: flex;
   align-items: center;
@@ -1096,7 +1100,6 @@ body.theme-gameboy [data-tooltip]::before {
   text-decoration: none;
 }
 
-/* Efeitos Hover com Cores das Marcas (Efeito Neon) */
 .contact-btn.whatsapp:hover {
   border-color: #25d366;
   color: #25d366;
@@ -1134,9 +1137,6 @@ body.theme-gameboy [data-tooltip]::before {
   box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
 }
 
-/* =========================
-   FOOTER
-   ========================= */
 .site-footer {
   background-color: var(--surface-color);
   border-top: 2px solid var(--surface-hover);
@@ -1186,15 +1186,12 @@ body.theme-gameboy [data-tooltip]::before {
   color: var(--surface-hover);
 }
 
-/* =========================
-   12. RESPONSIVIDADE
-   ========================= */
 @media (min-width: 1300px) {
   .conquistas {
-    display: block; /* Mostra o painel lateral apenas em telas grandes */
+    display: block;
   }
   main {
-    margin-right: 300px; /* Abre espaço para o aside não sobrepor o conteúdo */
+    margin-right: 300px;
   }
 }
 
@@ -1215,7 +1212,7 @@ body.theme-gameboy [data-tooltip]::before {
   }
 
   .grid {
-    grid-template-columns: 1fr; /* Cai para 1 por linha */
+    grid-template-columns: 1fr;
   }
 
   .fase-header h2 {
