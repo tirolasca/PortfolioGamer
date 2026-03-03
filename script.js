@@ -154,9 +154,6 @@ const dicasNPC = [
   },
 ];
 
-// ==========================================
-// 2. SISTEMA DE SAVE (LOCAL STORAGE)
-// ==========================================
 function salvarEstado() {
   const estado = {
     conquistas: Array.from(conquistasDesbloqueadas),
@@ -180,9 +177,6 @@ function carregarEstado() {
   }
 }
 
-// ==========================================
-// 3. RENDERIZAÇÃO DOM (UI)
-// ==========================================
 function inicializarSaudacao() {
   const saudacao = document.getElementById("saudacao");
   if (!saudacao) return;
@@ -291,9 +285,6 @@ function renderSkills() {
     .join("");
 }
 
-// ==========================================
-// 4. LÓGICA DE JOGO (CORE MECHANICS)
-// ==========================================
 function mostrarNotificacao(id) {
   const notificacao = document.getElementById("notificacao");
   const textoNotificacao = document.getElementById("textoNotificacao");
@@ -316,11 +307,11 @@ function desbloquearConquista(id) {
     salvarEstado();
     atualizarProgressoFases();
     atualizarFalasNPC();
-    tocarSom("conquista"); // <--- ADICIONE AQUI
+    tocarSom("conquista");
 
     if (id === "fim") {
       levelUpEffect();
-      tocarSom("levelup"); // <--- ADICIONE AQUI
+      tocarSom("levelup");
     }
   }
 }
@@ -334,7 +325,6 @@ function atualizarProgressoFases() {
   }
 }
 
-// === NPC ===
 function atualizarFalasNPC() {
   const npcBalao = document.getElementById("npcBalao");
   const npcTexto = document.getElementById("npcTexto");
@@ -367,17 +357,14 @@ function inicializarNPC() {
   setTimeout(() => atualizarFalasNPC(), 1000);
 }
 
-// === LOOT & INVENTÁRIO ===
 function coletarLoot(idItem) {
   if (inventarioLoot.has(idItem)) return;
 
   inventarioLoot.add(idItem);
 
-  // Esconde o item do mapa
   const itemNoMapa = document.getElementById(`loot-${idItem}`);
   if (itemNoMapa) itemNoMapa.style.display = "none";
 
-  // Preenche o Slot
   const slot = document.querySelector(`.slot[data-slot="${idItem}"]`);
   if (slot) {
     slot.classList.add("preenchido");
@@ -385,16 +372,14 @@ function coletarLoot(idItem) {
     slot.setAttribute("data-tooltip", LOOT_CONFIG[idItem].descricao);
   }
 
-  // Notificação
   const textoNotificacao = document.getElementById("textoNotificacao");
   const notificacao = document.getElementById("notificacao");
   textoNotificacao.textContent = `Loot encontrado: ${idItem.toUpperCase()}!`;
   notificacao.classList.remove("hidden");
   notificacao.classList.add("show");
   setTimeout(() => notificacao.classList.remove("show"), 3000);
-  tocarSom('loot');
+  tocarSom("loot");
 
-  // Tema Secreto
   if (inventarioLoot.size === totalLoot) {
     setTimeout(ativarTemaSecreto, 2000);
   }
@@ -416,7 +401,6 @@ function ativarTemaSecreto() {
   if (typeof levelUpEffect === "function") levelUpEffect();
 }
 
-// === EFEITOS ESPECIAIS ===
 function levelUpEffect() {
   if (typeof confetti !== "undefined") {
     const duration = 3000;
@@ -442,9 +426,6 @@ function levelUpEffect() {
   }
 }
 
-// ==========================================
-// 5. EVENTOS E OBSERVERS
-// ==========================================
 function progressoPorScroll() {
   const barraScroll = document.getElementById("barraProgresso");
   if (!barraScroll) return;
@@ -493,7 +474,6 @@ function inicializarObservers() {
 }
 
 function inicializarEventos() {
-  // Otimização do Scroll
   let ticking = false;
   window.addEventListener("scroll", () => {
     if (!ticking) {
@@ -527,20 +507,17 @@ function inicializarEventos() {
     btnReset.addEventListener("click", () => {
       if (!confirm("Tem certeza que deseja resetar toda a jornada?")) return;
 
-      // Limpa dados salvos
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem("questLootAceita");
       conquistasDesbloqueadas.clear();
       fasesVisitadas.clear();
       inventarioLoot.clear();
 
-      // Reseta UI Base
       renderConquistas();
       atualizarProgressoFases();
       const barraScroll = document.getElementById("barraProgresso");
       if (barraScroll) barraScroll.style.width = "0%";
 
-      // Reseta Bosses
       document.querySelectorAll(".card.boss").forEach((card) => {
         card.dataset.derrotado = "false";
         const icon = card.querySelector(".boss-icon");
@@ -551,7 +528,6 @@ function inicializarEventos() {
         }
       });
 
-      // Reseta Loot e Tema
       document.body.classList.remove("theme-gameboy");
       if (btnToggleTema) btnToggleTema.classList.add("hidden");
 
@@ -655,9 +631,6 @@ function inicializarQuestPopup() {
   });
 }
 
-// ==========================================
-// SISTEMA DE ÁUDIO (SFX)
-// ==========================================
 let somAtivado = true;
 
 const sfx = {
@@ -668,18 +641,15 @@ const sfx = {
   levelup: new Audio("audio/levelup.mp3"),
 };
 
-// Abaixa o volume do hover para não ficar irritante
 sfx.hover.volume = 0.1;
 sfx.click.volume = 0.3;
 
 function tocarSom(nome) {
   if (!somAtivado || !sfx[nome]) return;
 
-  // Clona o áudio para permitir que o mesmo som toque várias vezes seguidas (sem cortar)
   const somClone = sfx[nome].cloneNode();
   somClone.volume = sfx[nome].volume;
 
-  // O .catch evita erros no console se o navegador bloquear o autoplay
   somClone
     .play()
     .catch((e) =>
@@ -702,23 +672,19 @@ function inicializarAudio() {
     });
   }
 
-  // Adiciona o som de Hover e Click nos botões e links
   const elementosInterativos = document.querySelectorAll(
     "button, a, .card, .loot-item, .mapa-ponto, .npc-sprite",
   );
 
   elementosInterativos.forEach((el) => {
     el.addEventListener("mouseenter", () => tocarSom("hover"));
-    // Só adiciona som de clique se não for o botão de som (para não encavalar)
+
     if (el.id !== "btnSom") {
       el.addEventListener("click", () => tocarSom("click"));
     }
   });
 }
 
-// ==========================================
-// 6. INICIALIZAÇÃO DA APLICAÇÃO
-// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   inicializarSaudacao();
   renderFormacao();

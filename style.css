@@ -1,29 +1,20 @@
-/* ==========================================
-   1. FONTES E VARIÁVEIS DE TEMA (ROOT)
-   ========================================== */
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Press+Start+2P&display=swap");
 
 :root {
-  /* Paleta Dark Mode Base */
   --bg-color: #0f172a;
   --surface-color: #1e293b;
   --surface-hover: #334155;
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
-  
-  /* Cores de Ação / Gamificação */
-  --accent-color: #10b981; /* Progresso e Sucesso */
-  --boss-color: #ef4444;   /* Chefões e Perigo */
-  --gold-color: #fbbf24;   /* Conquistas e Destaques */
-  
-  /* Tipografia */
+
+  --accent-color: #10b981;
+  --boss-color: #ef4444;
+  --gold-color: #fbbf24;
+
   --font-texto: "Fira Code", monospace;
   --font-titulo: "Press Start 2P", cursive;
 }
 
-/* ==========================================
-   2. RESET GERAL E SCROLLBAR
-   ========================================== */
 * {
   margin: 0;
   padding: 0;
@@ -42,7 +33,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Customização da Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -57,16 +47,12 @@ body {
   background: var(--accent-color);
 }
 
-/* Acessibilidade (Navegação por Teclado) */
 a:focus-visible,
 button:focus-visible {
   outline: 2px dashed var(--accent-color);
   outline-offset: 4px;
 }
 
-/* ==========================================
-   3. ESTRUTURA E LAYOUT (GRIDS E FASES)
-   ========================================== */
 main {
   margin-top: 100px;
   padding: 0 2rem 4rem 2rem;
@@ -79,7 +65,9 @@ main {
   padding: 4rem 0;
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
 }
 
 .fase.visivel {
@@ -110,7 +98,6 @@ main {
   justify-content: center;
 }
 
-/* Botão de Som no HUD */
 .btn-som {
   background: transparent;
   border: none;
@@ -129,10 +116,6 @@ main {
   color: var(--boss-color);
 }
 
-/* ==========================================
-   4. COMPONENTES PRINCIPAIS
-   ========================================== */
-/* --- HUD (Menu Superior) --- */
 .hud {
   position: fixed;
   top: 0;
@@ -143,7 +126,6 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
   z-index: 100;
   border-bottom: 2px solid var(--surface-color);
 }
@@ -175,7 +157,32 @@ main {
   color: var(--accent-color);
 }
 
-/* --- Barras de Progresso --- */
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.header-logo {
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4));
+  transition:
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    filter 0.3s;
+}
+
+.header-logo:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8));
+}
+
+body.theme-gameboy .header-logo {
+  filter: sepia(1) hue-rotate(70deg) saturate(3) brightness(0.8)
+    drop-shadow(4px 4px 0px #0f380f);
+}
+
 .progresso-jornada {
   position: fixed;
   top: 0;
@@ -209,7 +216,6 @@ main {
   transition: width 0.5s ease;
 }
 
-/* --- Botões Gerais --- */
 button,
 .btn-batalha,
 .btn-reset,
@@ -247,13 +253,15 @@ button:hover,
   box-shadow: 0 0 10px var(--accent-color);
 }
 
-/* --- Cards Bases --- */
 .card {
   background: var(--surface-color);
   border: 2px solid var(--surface-hover);
   border-radius: 8px;
   padding: 1.5rem;
-  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .card:hover {
@@ -274,10 +282,6 @@ button:hover,
   margin-bottom: 0.5rem;
 }
 
-/* ==========================================
-   5. SISTEMAS DE JOGO (RPG ELEMENTS)
-   ========================================== */
-/* --- Player Avatar & Glitch Text --- */
 .player-card {
   text-align: center;
   max-width: 600px;
@@ -315,7 +319,7 @@ button:hover,
   filter: blur(2px);
   transition: opacity 0.3s ease-in-out;
   transform: translateX(-50%);
-  will-change: transform; /* Performance */
+  will-change: transform;
 }
 
 #inicio .player-card:hover .avatar {
@@ -329,8 +333,12 @@ button:hover,
 }
 
 @keyframes rotate-border {
-  0% { transform: translateX(-50%) rotate(0deg); }
-  100% { transform: translateX(-50%) rotate(360deg); }
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg);
+  }
 }
 
 .glitch-text {
@@ -374,24 +382,47 @@ button:hover,
 }
 
 @keyframes glitch-anim-1 {
-  0% { clip-path: inset(20% 0 80% 0); }
-  20% { clip-path: inset(60% 0 10% 0); }
-  40% { clip-path: inset(40% 0 50% 0); }
-  60% { clip-path: inset(80% 0 5% 0); }
-  80% { clip-path: inset(10% 0 70% 0); }
-  100% { clip-path: inset(30% 0 50% 0); }
+  0% {
+    clip-path: inset(20% 0 80% 0);
+  }
+  20% {
+    clip-path: inset(60% 0 10% 0);
+  }
+  40% {
+    clip-path: inset(40% 0 50% 0);
+  }
+  60% {
+    clip-path: inset(80% 0 5% 0);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+  }
+  100% {
+    clip-path: inset(30% 0 50% 0);
+  }
 }
 
 @keyframes glitch-anim-2 {
-  0% { clip-path: inset(10% 0 60% 0); }
-  20% { clip-path: inset(30% 0 20% 0); }
-  40% { clip-path: inset(70% 0 10% 0); }
-  60% { clip-path: inset(20% 0 50% 0); }
-  80% { clip-path: inset(50% 0 30% 0); }
-  100% { clip-path: inset(5% 0 80% 0); }
+  0% {
+    clip-path: inset(10% 0 60% 0);
+  }
+  20% {
+    clip-path: inset(30% 0 20% 0);
+  }
+  40% {
+    clip-path: inset(70% 0 10% 0);
+  }
+  60% {
+    clip-path: inset(20% 0 50% 0);
+  }
+  80% {
+    clip-path: inset(50% 0 30% 0);
+  }
+  100% {
+    clip-path: inset(5% 0 80% 0);
+  }
 }
 
-/* --- NPC System --- */
 .npc-container {
   position: fixed;
   bottom: 2rem;
@@ -415,9 +446,11 @@ button:hover,
   cursor: pointer;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
   animation: float 3s ease-in-out infinite;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   overflow: hidden;
-  will-change: transform; /* Performance */
+  will-change: transform;
 }
 
 .npc-sprite:hover {
@@ -443,7 +476,10 @@ button:hover,
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s;
 }
 
 .npc-balao.hidden {
@@ -479,12 +515,17 @@ button:hover,
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
-/* --- Mini Mapa (Fast Travel) --- */
 .mini-mapa {
   position: fixed;
   left: 1.5rem;
@@ -543,7 +584,6 @@ button:hover,
   transform: scale(1.1);
 }
 
-/* --- Boss Battles (Projetos) --- */
 .filtros {
   display: flex;
   gap: 1rem;
@@ -575,7 +615,6 @@ button:hover,
   box-shadow: none;
 }
 
-/* --- Timeline (Experiências / Quest Log) --- */
 .timeline {
   position: relative;
   max-width: 900px;
@@ -601,8 +640,12 @@ button:hover,
   width: 50%;
 }
 
-.timeline-item:nth-child(odd) { left: 0; }
-.timeline-item:nth-child(even) { left: 50%; }
+.timeline-item:nth-child(odd) {
+  left: 0;
+}
+.timeline-item:nth-child(even) {
+  left: 50%;
+}
 
 .timeline-icon {
   position: absolute;
@@ -652,11 +695,16 @@ button:hover,
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* --- Habilidades (Skills) --- */
 .skill-header {
   display: flex;
   align-items: center;
@@ -677,7 +725,9 @@ button:hover,
   border-radius: 8px;
   border: 1px solid var(--accent-color);
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -708,14 +758,10 @@ button:hover,
   transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ==========================================
-   6. UI DO USUÁRIO (CONQUISTAS, LOOT E TOOLTIPS)
-   ========================================== */
-/* --- Painel Lateral (Conquistas) --- */
 .conquistas {
   position: fixed;
   right: 2rem;
-  top: 100px;
+  top: 130px;
   width: 250px;
   background: rgba(30, 41, 59, 0.8);
   border: 2px solid var(--surface-hover);
@@ -781,7 +827,6 @@ button:hover,
   opacity: 0.8;
 }
 
-/* --- Inventário e Itens --- */
 .inventario-container {
   margin-top: 2rem;
   border-top: 2px dashed var(--surface-hover);
@@ -833,11 +878,19 @@ button:hover,
   text-shadow: 0 0 10px var(--gold-color);
 }
 
-#loot-chave { top: 20px; left: 20px; }
-#loot-pergaminho { top: 10px; right: -40px; }
-#loot-pocao { bottom: 20px; right: 50px; }
+#loot-chave {
+  top: 20px;
+  left: 20px;
+}
+#loot-pergaminho {
+  top: 10px;
+  right: -40px;
+}
+#loot-pocao {
+  bottom: 20px;
+  right: 50px;
+}
 
-/* --- Tooltips (Dicas ao Passar o Mouse) --- */
 [data-tooltip] {
   position: relative;
   cursor: help;
@@ -848,7 +901,10 @@ button:hover,
   position: absolute;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease;
   z-index: 999;
   pointer-events: none;
 }
@@ -887,7 +943,6 @@ button:hover,
   transform: translateY(-50%) translateX(0);
 }
 
-/* --- Popups e Notificações --- */
 .notificacao {
   position: fixed;
   bottom: 2rem;
@@ -989,9 +1044,6 @@ button:hover,
   padding: 0.8rem 1.5rem;
 }
 
-/* ==========================================
-   7. TELA FINAL E FOOTER
-   ========================================== */
 .final-card {
   text-align: center;
   max-width: 700px;
@@ -1114,9 +1166,6 @@ button:hover,
   color: var(--surface-hover);
 }
 
-/* ==========================================
-   8. TEMA SECRETO (GAMEBOY 8-BITS)
-   ========================================== */
 body.theme-gameboy {
   --bg-color: #8bac0f;
   --surface-color: #9bbc0f;
@@ -1170,10 +1219,48 @@ body.theme-gameboy [data-tooltip]::before {
   border-left-color: #9bbc0f;
 }
 
-/* ==========================================
-   9. RESPONSIVIDADE (MEDIA QUERIES)
-   ========================================== */
-/* Telas Grandes (Mostra o Painel de Conquistas) */
+body.theme-gameboy .hud {
+  background: #9bbc0f;
+  border-bottom: 4px solid #0f380f;
+  backdrop-filter: none;
+}
+
+body.theme-gameboy .hud h1,
+body.theme-gameboy .hud nav a,
+body.theme-gameboy .btn-som {
+  color: #0f380f;
+  text-shadow: none;
+}
+
+body.theme-gameboy .hud nav a:hover,
+body.theme-gameboy .btn-som:hover {
+  color: #306230;
+}
+
+body.theme-gameboy .btn-som.mutado {
+  color: #306230;
+  opacity: 0.7;
+}
+
+body.theme-gameboy .npc-balao {
+  background: #9bbc0f;
+  border: 4px solid #0f380f;
+  box-shadow: 4px 4px 0px #0f380f;
+}
+
+body.theme-gameboy .npc-balao p {
+  color: #0f380f;
+}
+
+body.theme-gameboy .btn-fechar-npc {
+  color: #0f380f;
+}
+
+body.theme-gameboy .btn-fechar-npc:hover {
+  color: #306230;
+  transform: scale(1.2);
+}
+
 @media (min-width: 1300px) {
   .conquistas {
     display: block;
@@ -1183,17 +1270,6 @@ body.theme-gameboy [data-tooltip]::before {
   }
 }
 
-/* Telas Médias (Tablets) */
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .mini-mapa {
-    display: none;
-  }
-}
-
-/* Telas Pequenas (Celulares) */
 @media (max-width: 768px) {
   .hud {
     flex-direction: column;
@@ -1227,14 +1303,14 @@ body.theme-gameboy [data-tooltip]::before {
   .timeline::after {
     left: 31px;
   }
-  
+
   .timeline-item {
     width: 100%;
     padding-left: 70px;
     padding-right: 0;
     left: 0 !important;
   }
-  
+
   .timeline-item:nth-child(even) .timeline-icon,
   .timeline-item:nth-child(odd) .timeline-icon {
     left: 8px;
@@ -1243,17 +1319,17 @@ body.theme-gameboy [data-tooltip]::before {
   .contact-buttons {
     flex-direction: column;
   }
-  
+
   .contact-btn {
     justify-content: center;
   }
-  
+
   .footer-brand {
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
   }
-  
+
   .divisor {
     display: none;
   }
@@ -1262,7 +1338,7 @@ body.theme-gameboy [data-tooltip]::before {
     bottom: 1rem;
     left: 1rem;
   }
-  
+
   .npc-sprite {
     width: 50px;
     height: 50px;
