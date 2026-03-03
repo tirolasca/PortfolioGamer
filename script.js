@@ -244,8 +244,8 @@ function renderProjetos() {
       </h3>
       <p>${projeto.descricao}</p>
       <p><strong>Tecnologias:</strong> ${projeto.tecnologias.join(", ")}</p>
-      <a href="${projeto.link}" target="_blank" class="btn-batalha">
-        <i class="fa-solid fa-sword"></i> Ver batalha
+     <a href="${projeto.link}" target="_blank" class="btn-batalha">
+        <i class="fa-solid fa-shield-halved"></i> Ver batalha
       </a>
     `;
 
@@ -546,6 +546,61 @@ function inicializarEventos() {
   }
 }
 
+function inicializarMenuMobile() {
+  const btnMenu = document.getElementById("btnMenu");
+  const hudNav = document.querySelector(".hud-nav");
+
+  if (!btnMenu || !hudNav) return;
+
+  btnMenu.addEventListener("click", () => {
+    hudNav.classList.toggle("menu-aberto");
+
+    const icone = btnMenu.querySelector("i");
+    if (hudNav.classList.contains("menu-aberto")) {
+      icone.classList.replace("fa-bars", "fa-xmark");
+    } else {
+      icone.classList.replace("fa-xmark", "fa-bars");
+    }
+  });
+
+  const links = hudNav.querySelectorAll("a");
+  links.forEach(link => {
+    link.addEventListener("click", () => {
+      hudNav.classList.remove("menu-aberto");
+      btnMenu.querySelector("i").classList.replace("fa-xmark", "fa-bars");
+    });
+  });
+}
+
+function inicializarPainelConquistas() {
+  const btnToggle = document.getElementById("btnConquistasToggle");
+  const painel = document.querySelector(".conquistas");
+  const btnFechar = document.getElementById("fecharConquistasMobile");
+
+  if (!btnToggle || !painel || !btnFechar) return;
+
+  // Abre o Painel
+  btnToggle.addEventListener("click", () => {
+    painel.classList.add("aberta");
+    
+    // Recolhe o menu Hamburger para despoluir a tela
+    const hudNav = document.querySelector(".hud-nav");
+    if (hudNav && hudNav.classList.contains("menu-aberto")) {
+      hudNav.classList.remove("menu-aberto");
+      document.querySelector("#btnMenu i").classList.replace("fa-xmark", "fa-bars");
+    }
+    
+    // Toca som de clique (se você estiver usando a função tocarSom)
+    if (typeof tocarSom === "function") tocarSom('click');
+  });
+
+  // Fecha o Painel
+  btnFechar.addEventListener("click", () => {
+    painel.classList.remove("aberta");
+    if (typeof tocarSom === "function") tocarSom('click');
+  });
+}
+
 function inicializarFiltrosProjetos() {
   const botoes = document.querySelectorAll(".btn-filtro");
 
@@ -700,4 +755,6 @@ document.addEventListener("DOMContentLoaded", () => {
   inicializarMiniMapa();
   inicializarQuestPopup();
   inicializarAudio();
+  inicializarMenuMobile();
+  inicializarPainelConquistas();
 });

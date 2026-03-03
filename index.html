@@ -10,18 +10,50 @@
     <meta name="author" content="Lucas Santos" />
     <title>Lucas Santos | Jornada do Desenvolvedor</title>
 
-    <link
+    <link rel="icon" type="image/png" href="img/Logo.png" />
+    <link rel="apple-touch-icon" href="img/Logo.png" />
+
+    <meta
+      property="og:title"
+      content="Lucas Santos | Jornada do Desenvolvedor"
+    />
+    <meta
+      property="og:description"
+      content="Portfólio interativo e gamificado do desenvolvedor Lucas Santos."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://portfoliogamer.vercel.app" />
+    <meta
+      property="og:image"
+      content="https://portfoliogamer.vercel.app/img/Logo.png"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://portfoliogamer.vercel.app/img/Logo.png"
+    />
+
+<link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-  <header class="hud">
-      <a href="#inicio" class="logo-link" title="Voltar ao Início">
-        <img src="img/logo.png" alt="Logo Lucas Santos" class="header-logo" />
-      </a>
-      <nav aria-label="Navegação Principal">
+    <header class="hud">
+      <div class="hud-brand">
+        <a href="#inicio" class="logo-link" title="Voltar ao Início">
+          <img src="img/Logo.png" alt="Logo Lucas Santos" class="header-logo" />
+        </a>
+        <h1 class="dev-level">Nv.1 Dev</h1>
+      </div>
+
+      <button id="btnMenu" class="btn-menu" aria-label="Abrir Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav aria-label="Navegação Principal" class="hud-nav">
         <a href="#inicio"><i class="fa-solid fa-house"></i> Início</a>
         <a href="#formacao"
           ><i class="fa-solid fa-graduation-cap"></i> Formação</a
@@ -32,9 +64,18 @@
         <a href="#projetos"><i class="fa-solid fa-dragon"></i> Projetos</a>
         <a href="#skills"><i class="fa-solid fa-sitemap"></i> Habilidades</a>
         <a href="#contato"><i class="fa-solid fa-address-card"></i> Contato</a>
-        <button id="btnSom" class="btn-som" title="Ligar/Desligar Som">
-          <i class="fa-solid fa-volume-high"></i>
-        </button>
+        <div class="nav-icons">
+          <button
+            id="btnConquistasToggle"
+            class="btn-som"
+            title="Ver Conquistas e Inventário"
+          >
+            <i class="fa-solid fa-trophy"></i>
+          </button>
+          <button id="btnSom" class="btn-som" title="Ligar/Desligar Som">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
       </nav>
     </header>
 
@@ -68,6 +109,13 @@
     </div>
 
     <aside class="conquistas">
+      <button
+        id="fecharConquistasMobile"
+        class="btn-fechar-mobile"
+        aria-label="Fechar Conquistas"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
       <h2><i class="fa-solid fa-trophy"></i> Conquistas</h2>
       <ul id="listaConquistas"></ul>
 
@@ -415,7 +463,11 @@
             onclick="coletarLoot('pocao')"
             title="Objeto Misterioso..."
           ></i>
-          <a href="https://lucastec.vercel.app" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://lucastec.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
               src="img/LogoNome.png"
               alt="Logo Lucas Santos"
