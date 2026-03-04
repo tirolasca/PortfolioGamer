@@ -248,6 +248,7 @@ function renderProjetos() {
       icon.classList.replace("fa-dragon", "fa-skull");
       icon.style.color = "#9ca3af";
       desbloquearConquista("boss");
+      tocarSom('boss_hit');
       adicionarXP(100);
     });
   });
@@ -324,7 +325,7 @@ function atualizarFalasNPC() {
   timerDigitacao = setInterval(() => {
     if (i < textoFinal.length) {
       npcTexto.textContent += textoFinal.charAt(i);
-      if (i % 3 === 0) tocarSom('hover'); 
+      if (i % 3 === 0) tocarSom('typewriter'); 
       i++;
     } else {
       clearInterval(timerDigitacao); 
@@ -336,9 +337,17 @@ function inicializarNPC() {
   const npcSprite = document.getElementById("npcSprite");
   const btnFechar = document.getElementById("fecharNpc");
 
-  if (npcSprite) npcSprite.addEventListener("click", atualizarFalasNPC);
-  if (btnFechar) btnFechar.addEventListener("click", () => document.getElementById("npcBalao").classList.add("hidden"));
-  setTimeout(() => atualizarFalasNPC(), 1000);
+  if (npcSprite) {
+    npcSprite.addEventListener("click", atualizarFalasNPC);
+  }
+
+  if (btnFechar) {
+    btnFechar.addEventListener("click", () => {
+      document.getElementById("npcBalao").classList.add("hidden");
+      // NOVA REGRA: Mata a máquina de escrever e o som instantaneamente!
+      if (timerDigitacao) clearInterval(timerDigitacao);
+    });
+  }
 }
 
 function coletarLoot(idItem) {
@@ -412,7 +421,7 @@ function inicializarEventosMissao() {
   btnRecusar.addEventListener("click", () => {
     questPopup.classList.add("hidden"); 
     gameOverScreen.classList.remove("hidden");
-    tocarSom('conquista'); 
+    tocarSom('gameover');
   });
 
   btnTentarNovamente.addEventListener("click", () => {
@@ -472,7 +481,7 @@ function inicializarEventosGlobais() {
     btnReset.addEventListener("click", () => {
       if (!confirm("Tem certeza que deseja resetar toda a jornada?")) return;
       localStorage.clear();
-      location.reload(); // Recarrega a página de forma limpa
+     window.location.href = window.location.pathname; // Recarrega a página de forma limpa
     });
   }
 }
@@ -507,12 +516,12 @@ function inicializarPainelConquistas() {
       painel.classList.add("aberta");
       document.querySelector(".hud-nav")?.classList.remove("menu-aberto");
       document.querySelector("#btnMenu i")?.classList.replace("fa-xmark", "fa-bars");
-      tocarSom("click");
+      tocarSom("menu_open");
     });
 
     btnFechar.addEventListener("click", () => {
       painel.classList.remove("aberta");
-      tocarSom("click");
+      tocarSom("menu_close");
     });
   }
 }
@@ -580,22 +589,107 @@ function inicializarQuestPopup() {
 // ==========================================
 // ÁUDIO E EASTER EGGS
 // ==========================================
-let somAtivado = true;
-const sfx = {
-  hover: new Audio("audio/hover.mp3"),
-  click: new Audio("audio/click.mp3"),
-  conquista: new Audio("audio/conquista.mp3"),
-  loot: new Audio("audio/loot.mp3"),
-  levelup: new Audio("audio/levelup.mp3"),
-};
-sfx.hover.volume = 0.1;
-sfx.click.volume = 0.3;
 
+// ==========================================
+// ÁUDIO 8-BITS GERADO VIA CÓDIGO (WEB AUDIO API)
+// ==========================================
+let somAtivado = true;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+// Motor Melhorado: Agora faz "Sweeps" (frequência que desliza, ótimo para lasers e pulos)
+function playTone(frequencia, tipo, duracao, volume = 0.1, freqFinal = null) {
+  if (!somAtivado) return;
+  initAudio();
+  
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  
+  osc.type = tipo; 
+  osc.frequency.setValueAtTime(frequencia, audioCtx.currentTime);
+  
+  // Se tiver frequência final, o som "escorrega" até ela (efeito PEW PEW!)
+  if (freqFinal) {
+    osc.frequency.exponentialRampToValueAtTime(freqFinal, audioCtx.currentTime + duracao);
+  }
+  
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duracao);
+  
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.start();
+  osc.stop(audioCtx.currentTime + duracao);
+}
+
+// Biblioteca de Efeitos Sonoros Completa
 function tocarSom(nome) {
-  if (!somAtivado || !sfx[nome]) return;
-  const somClone = sfx[nome].cloneNode();
-  somClone.volume = sfx[nome].volume;
-  somClone.play().catch(() => console.log("Áudio bloqueado pelo navegador até o usuário interagir."));
+  if (!somAtivado) return;
+  
+  switch(nome) {
+    case 'hover':
+      playTone(300, 'sine', 0.1, 0.03);
+      break;
+      
+    case 'click':
+      playTone(600, 'square', 0.05, 0.05);
+      setTimeout(() => playTone(800, 'square', 0.1, 0.05), 50);
+      break;
+      
+    case 'conquista':
+      playTone(987.77, 'square', 0.1, 0.05); 
+      setTimeout(() => playTone(1318.51, 'square', 0.4, 0.05), 100); 
+      break;
+      
+    case 'loot':
+      playTone(400, 'sawtooth', 0.1, 0.05, 600);
+      setTimeout(() => playTone(600, 'sawtooth', 0.1, 0.05, 800), 100);
+      setTimeout(() => playTone(800, 'sawtooth', 0.3, 0.05, 1200), 200);
+      break;
+      
+    case 'levelup':
+      playTone(440, 'square', 0.15, 0.05); 
+      setTimeout(() => playTone(440, 'square', 0.15, 0.05), 150); 
+      setTimeout(() => playTone(440, 'square', 0.15, 0.05), 300); 
+      setTimeout(() => playTone(554.37, 'square', 0.4, 0.05), 450); 
+      break;
+
+    /* --- NOVOS EFEITOS AQUI --- */
+    case 'boss_hit':
+      // Som de dano/espada (Agudo caindo rápido para grave)
+      playTone(800, 'sawtooth', 0.2, 0.1, 100);
+      break;
+
+    case 'gameover':
+      // Som clássico de queda (Pac-man morrendo / Mário caindo no buraco)
+      playTone(400, 'sawtooth', 0.8, 0.1, 50);
+      break;
+
+    case 'typewriter':
+      // Som de fala de NPC de RPG antigo (frequência randômica leve)
+      const freqNPC = Math.random() * 200 + 700; 
+      playTone(freqNPC, 'square', 0.03, 0.02);
+      break;
+      
+    case 'menu_open':
+      // Som abrindo
+      playTone(300, 'sine', 0.1, 0.05, 600);
+      break;
+
+    case 'menu_close':
+      // Som fechando
+      playTone(600, 'sine', 0.1, 0.05, 300);
+      break;
+  }
 }
 
 function inicializarAudio() {
@@ -605,10 +699,14 @@ function inicializarAudio() {
       somAtivado = !somAtivado;
       btnSom.innerHTML = somAtivado ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
       btnSom.classList.toggle("mutado", !somAtivado);
-      if (somAtivado) tocarSom("click");
+      if (somAtivado) {
+        initAudio(); // Liga o motor
+        tocarSom("click");
+      }
     });
   }
 
+  // Coloca os sons nos botões
   document.querySelectorAll("button, a, .card, .loot-item, .mapa-ponto, .npc-sprite").forEach(el => {
     el.addEventListener("mouseenter", () => tocarSom("hover"));
     if (el.id !== "btnSom") el.addEventListener("click", () => tocarSom("click"));
@@ -636,6 +734,26 @@ document.addEventListener('keydown', (e) => {
 // BOOT (INICIALIZAÇÃO DO JOGO)
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+
+  const coinScreen = document.getElementById("insertCoinScreen");
+  if (coinScreen) {
+    coinScreen.addEventListener("click", () => {
+      // 1. Inicia o motor de áudio do navegador na hora!
+      initAudio(); 
+      
+      // 2. Toca um som épico de "Ficha Inserida" (Moeda do Mario)
+      playTone(987.77, 'square', 0.1, 0.05); 
+      setTimeout(() => playTone(1318.51, 'square', 0.4, 0.05), 100);
+
+      // 3. Some com a tela preta revelando o site
+      coinScreen.style.opacity = "0";
+      setTimeout(() => {
+        coinScreen.remove();
+        // Opcional: Mostra a primeira fala do NPC só depois que a tela abre
+        atualizarFalasNPC();
+      }, 800);
+    });
+  }
   inicializarSaudacao();
   renderFormacao();
   renderProjetos();

@@ -85,6 +85,57 @@ main {
   margin-right: auto;
 }
 
+.insert-coin-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #050505; /* Preto profundo estilo tubo desligado */
+  background-image: 
+    radial-gradient(circle, transparent 20%, #000 120%),
+    linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 4px 4px;
+  z-index: 9999999; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.8s ease-out;
+  cursor: pointer; /* O mouse vira uma mãozinha na tela toda */
+}
+
+.arcade-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arcade-title {
+  font-size: 3rem !important;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.arcade-subtitle {
+  font-family: var(--font-titulo);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  margin-bottom: 4rem;
+}
+
+.blinking-insert-coin {
+  color: var(--gold-color);
+  font-family: var(--font-titulo);
+  font-size: 1.2rem;
+  text-shadow: 0 0 15px var(--gold-color);
+  animation: blinkCoin 1s step-end infinite;
+}
+
+/* O clássico efeito de piscar seco dos arcades */
+@keyframes blinkCoin {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .fase {
   padding: 4rem 0;
   opacity: 0;
@@ -862,7 +913,20 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
 @keyframes flashFundo { 0% { background: rgba(15, 23, 42, 0.85); } 50% { background: rgba(16, 185, 129, 0.6); } 100% { background: transparent; opacity: 0; } }
 @keyframes acceptQuestExplosion { 0% { transform: scale(1); box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); opacity: 1; } 30% { transform: scale(0.9); box-shadow: 0 0 50px var(--accent-color); } 60% { transform: scale(1.2); box-shadow: 0 0 100px var(--accent-color), 0 0 200px var(--accent-color); background: var(--accent-color); color: var(--bg-color); border-color: var(--accent-color); } 100% { transform: scale(1.8) translateY(-30px); opacity: 0; filter: blur(15px); } }
 
-.game-over-overlay { background: rgba(0, 0, 0, 0.98); z-index: 10000; }
+.game-over-overlay { background: rgba(0, 0, 0, 0.98); z-index: 10000;
+
+.game-over-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: auto; /* Força o elemento a ficar no meio absoluto */
+}
+
+.game-over-content button {
+  margin-top: 2rem; /* Afasta o botão do texto para ficar simétrico */
+} }
 .game-over-overlay:not(.hidden) .game-over-content { animation: deathScreen 1.5s ease-out forwards; }
 .game-over-content h2 { font-family: var(--font-titulo); font-size: 3.5rem; color: var(--boss-color); text-shadow: 0 0 20px rgba(239, 68, 68, 0.8); margin-bottom: 1rem; }
 .game-over-content p { color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 2rem; }
@@ -913,6 +977,72 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   [data-tooltip]:hover::after, [data-tooltip]:hover::before { transform: translateX(-50%) translateY(0); }
   .conquistas.aberta { padding-bottom: 3.5rem; }
   #loot-pergaminho { top: 2rem; right: 10%; }
+  .slot[data-tooltip]::after {
+    top: auto !important;
+    bottom: 140% !important; /* Vai para cima do quadradinho */
+    left: 50% !important;
+    transform: translateX(-50%) translateY(10px) !important;
+  }
+  
+  /* Arruma a setinha (triângulo) para apontar para baixo em direção ao slot */
+  .slot[data-tooltip]::before {
+    top: auto !important;
+    bottom: calc(140% - 12px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(10px) !important;
+    border: 6px solid transparent !important;
+    border-top-color: var(--accent-color) !important; /* A cor fica na parte de cima agora */
+    border-bottom-color: transparent !important;
+  }
+
+.inventario-slots .slot[data-tooltip]::after {
+    width: 140px !important; 
+    max-width: 140px !important;
+    white-space: normal !important; /* Garante que o texto longo vai para a linha de baixo */
+    text-align: center !important;
+    padding: 10px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* 2. Slot 1 (Esquerda) - Alinha a caixa pela quina esquerda do botão */
+  .inventario-slots .slot:nth-child(1)[data-tooltip]::after {
+    left: 0 !important;
+    right: auto !important;
+    transform: translateY(10px) !important;
+  }
+  .inventario-slots .slot:nth-child(1)[data-tooltip]:hover::after {
+    transform: translateY(0) !important;
+  }
+
+  /* 3. Slot 2 (Meio) - Continua perfeitamente centralizado */
+  .inventario-slots .slot:nth-child(2)[data-tooltip]::after {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) translateY(10px) !important;
+  }
+  .inventario-slots .slot:nth-child(2)[data-tooltip]:hover::after {
+    transform: translateX(-50%) translateY(0) !important;
+  }
+
+  /* 4. Slot 3 (Direita) - Alinha a caixa pela quina direita do botão */
+  .inventario-slots .slot:nth-child(3)[data-tooltip]::after {
+    left: auto !important;
+    right: 0 !important;
+    transform: translateY(10px) !important;
+  }
+  .inventario-slots .slot:nth-child(3)[data-tooltip]:hover::after {
+    transform: translateY(0) !important;
+  }
+
+  /* 5. A setinha (triângulo) continua acompanhando o centro exato de cada botão */
+  .inventario-slots .slot[data-tooltip]::before {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) translateY(10px) !important;
+  }
+  .inventario-slots .slot[data-tooltip]:hover::before {
+    transform: translateX(-50%) translateY(0) !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -935,9 +1065,30 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   [data-tooltip]::before { right: auto; left: 50%; top: calc(130% - 12px); transform: translateX(-50%) translateY(-10px); border: 6px solid transparent; border-bottom-color: var(--accent-color); }
   [data-tooltip]:hover::after, [data-tooltip]:hover::before { transform: translateX(-50%) translateY(0); }
   .conquistas.aberta { padding-bottom: 3.5rem; }
-  .npc-container { bottom: 75px; left: 1rem; }
-  .npc-sprite { width: 50px; height: 50px; font-size: 1.5rem; }
-  .npc-balao { max-width: 220px; padding: 0.8rem; }
+  .npc-container { 
+  position: fixed; 
+  bottom: 2rem; 
+  left: 2rem; 
+  z-index: 998; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: flex-start; 
+  gap: 1rem; 
+  /* NOVA REGRA: A caixa principal vira um fantasma e não bloqueia cliques! */
+  pointer-events: none; 
+}
+
+.npc-sprite { 
+  width: 70px; height: 70px; background: rgba(30, 41, 59, 0.8); border: 2px solid var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); animation: float 3s ease-in-out infinite; transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; will-change: transform; 
+  /* NOVA REGRA: O bonequinho em si continua sendo clicável */
+  pointer-events: auto; 
+}
+
+.npc-balao { 
+  background: rgba(15, 23, 42, 0.95); border: 2px solid var(--text-primary); border-radius: 8px 8px 8px 0; padding: 1rem 2rem 1rem 1rem; max-width: 250px; box-shadow: 4px 4px 0px var(--accent-color); position: relative; opacity: 1; visibility: visible; transform: translateY(0); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; 
+  /* NOVA REGRA: O balão visível também é clicável (para podermos fechá-lo) */
+  pointer-events: auto;
+}
   .notificacao.show { right: 1rem; left: 1rem; bottom: 75px; }
   .timeline::after { left: 31px; }
   .timeline-item { width: 100%; padding-left: 70px; padding-right: 0; left: 0 !important; }
@@ -946,4 +1097,8 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   .contact-btn { justify-content: center; }
   .footer-brand { flex-direction: column; text-align: center; gap: 0.5rem; }
   .divisor { display: none; }
+  .slot[data-tooltip]:hover::after, 
+  .slot[data-tooltip]:hover::before {
+    transform: translateX(-50%) translateY(0) !important;
+  }
 }

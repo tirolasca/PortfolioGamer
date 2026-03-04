@@ -35,11 +35,14 @@
       </div>
     </noscript>
 
-    <div id="preloader" class="preloader-overlay">
-      <div class="preloader-content">
-        <i class="fa-solid fa-gamepad fa-bounce" style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
-        <h2 class="glitch-text" data-text="CARREGANDO...">CARREGANDO...</h2>
-        <div class="loading-bar-container"><div class="loading-bar"></div></div>
+   <div id="insertCoinScreen" class="insert-coin-overlay">
+      <div class="arcade-content">
+        <h1 class="glitch-text arcade-title" data-text="LUCAS SANTOS">LUCAS SANTOS</h1>
+        <p class="arcade-subtitle">A JORNADA DO DESENVOLVEDOR</p>
+        
+        <div class="blinking-insert-coin">
+          <i class="fa-solid fa-coins"></i> INSERT COIN TO PLAY
+        </div>
       </div>
     </div>
 
@@ -287,14 +290,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
     
-    <script>
-      window.addEventListener("load", () => {
-        const preloader = document.getElementById("preloader");
-        if(preloader) {
-          preloader.style.opacity = "0";
-          setTimeout(() => preloader.remove(), 500); // Remove do HTML após o fade
-        }
-      });
-    </script>
+   
   </body>
 </html>
