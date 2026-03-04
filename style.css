@@ -1067,8 +1067,8 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   .conquistas.aberta { padding-bottom: 3.5rem; }
   .npc-container { 
   position: fixed; 
-  bottom: 2rem; 
-  left: 2rem; 
+  bottom: 80px !important; /* Levanta o NPC para dar bastante folga do minimapa */
+    left: 1rem;
   z-index: 998; 
   display: flex; 
   flex-direction: column; 
