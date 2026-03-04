@@ -13,34 +13,36 @@
     <link rel="icon" type="image/png" href="img/Logo.png" />
     <link rel="apple-touch-icon" href="img/Logo.png" />
 
-    <meta
-      property="og:title"
-      content="Lucas Santos | Jornada do Desenvolvedor"
-    />
-    <meta
-      property="og:description"
-      content="Portfólio interativo e gamificado do desenvolvedor Lucas Santos."
-    />
+    <meta property="og:title" content="Lucas Santos | Jornada do Desenvolvedor" />
+    <meta property="og:description" content="Portfólio interativo e gamificado do desenvolvedor Lucas Santos." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://portfoliogamer.vercel.app" />
-    <meta
-      property="og:image"
-      content="https://portfoliogamer.vercel.app/img/Logo.png"
-    />
-
+    <meta property="og:image" content="https://portfoliogamer.vercel.app/img/Logo.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:image"
-      content="https://portfoliogamer.vercel.app/img/Logo.png"
-    />
+    <meta name="twitter:image" content="https://portfoliogamer.vercel.app/img/Logo.png" />
 
-<link
+    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
+  
   <body>
+    <noscript>
+      <div style="background: #ef4444; color: white; padding: 20px; text-align: center; font-family: sans-serif; position: fixed; width: 100%; z-index: 999999; top: 0;">
+        <strong>ALERTA DE SISTEMA:</strong> Você precisa habilitar o JavaScript para jogar e visualizar este portfólio corretamente!
+      </div>
+    </noscript>
+
+    <div id="preloader" class="preloader-overlay">
+      <div class="preloader-content">
+        <i class="fa-solid fa-gamepad fa-bounce" style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+        <h2 class="glitch-text" data-text="CARREGANDO...">CARREGANDO...</h2>
+        <div class="loading-bar-container"><div class="loading-bar"></div></div>
+      </div>
+    </div>
+
     <header class="hud">
       <div class="hud-brand">
         <a href="#inicio" class="logo-link" title="Voltar ao Início">
@@ -55,21 +57,13 @@
 
       <nav aria-label="Navegação Principal" class="hud-nav">
         <a href="#inicio"><i class="fa-solid fa-house"></i> Início</a>
-        <a href="#formacao"
-          ><i class="fa-solid fa-graduation-cap"></i> Formação</a
-        >
-        <a href="#experiencias"
-          ><i class="fa-solid fa-briefcase"></i> Experiências</a
-        >
+        <a href="#formacao"><i class="fa-solid fa-graduation-cap"></i> Formação</a>
+        <a href="#experiencias"><i class="fa-solid fa-briefcase"></i> Experiências</a>
         <a href="#projetos"><i class="fa-solid fa-dragon"></i> Projetos</a>
         <a href="#skills"><i class="fa-solid fa-sitemap"></i> Habilidades</a>
         <a href="#contato"><i class="fa-solid fa-address-card"></i> Contato</a>
         <div class="nav-icons">
-          <button
-            id="btnConquistasToggle"
-            class="btn-som"
-            title="Ver Conquistas e Inventário"
-          >
+          <button id="btnConquistasToggle" class="btn-som" title="Ver Conquistas e Inventário">
             <i class="fa-solid fa-trophy"></i>
           </button>
           <button id="btnSom" class="btn-som" title="Ligar/Desligar Som">
@@ -79,41 +73,37 @@
       </nav>
     </header>
 
-    <div id="questPopup" class="quest-overlay hidden">
+    <div id="questPopup" class="quest-overlay hidden" role="dialog" aria-labelledby="questTitle">
       <div class="quest-box">
-        <h2>
-          <i class="fa-solid fa-exclamation-circle"></i> Missão Secundária
-        </h2>
-
-        <p>
-          Rumores dizem que há <strong>3 itens mágicos</strong> escondidos pelas
-          seções deste portfólio...
-        </p>
-
+        <h2 id="questTitle"><i class="fa-solid fa-exclamation-circle"></i> Missão Secundária</h2>
+        <p>Rumores dizem que há <strong>3 itens mágicos</strong> escondidos pelas seções deste portfólio...</p>
         <ul class="quest-items">
           <li><i class="fa-solid fa-key"></i> Chave Dourada</li>
           <li><i class="fa-solid fa-scroll"></i> Pergaminho Antigo</li>
           <li><i class="fa-solid fa-flask"></i> Poção de Mana</li>
         </ul>
-
         <p>Encontre-os para desbloquear um poder oculto de 8-bits!</p>
-
-        <button id="btnAceitarQuest" class="btn-acao">
-          <i class="fa-solid fa-check"></i> Aceitar Missão
-        </button>
+        <div class="quest-actions">
+          <button id="btnAceitarQuest" class="btn-acao"><i class="fa-solid fa-check"></i> Aceitar Missão</button>
+          <button id="btnRecusarQuest" class="btn-reset"><i class="fa-solid fa-xmark"></i> Recusar</button>
+        </div>
       </div>
     </div>
 
-    <div class="progresso-jornada" aria-hidden="true">
+    <div id="gameOverScreen" class="game-over-overlay hidden">
+      <div class="game-over-content">
+        <h2 class="glitch-text" data-text="GAME OVER">GAME OVER</h2>
+        <p>A jornada termina antes mesmo de começar...</p>
+        <button id="btnTentarNovamente" class="btn-batalha"><i class="fa-solid fa-rotate-right"></i> Tentar Novamente</button>
+      </div>
+    </div>
+
+    <div class="progresso-jornada" aria-hidden="true" title="Barra de Experiência (XP)">
       <div id="barraProgresso"></div>
     </div>
 
-    <aside class="conquistas">
-      <button
-        id="fecharConquistasMobile"
-        class="btn-fechar-mobile"
-        aria-label="Fechar Conquistas"
-      >
+    <aside class="conquistas" aria-label="Painel de Conquistas e Inventário">
+      <button id="fecharConquistasMobile" class="btn-fechar-mobile" aria-label="Fechar Conquistas">
         <i class="fa-solid fa-xmark"></i>
       </button>
       <h2><i class="fa-solid fa-trophy"></i> Conquistas</h2>
@@ -125,32 +115,10 @@
 
       <div class="inventario-container">
         <h2><i class="fa-solid fa-box-open"></i> Inventário</h2>
-        <div
-          id="slotsInventario"
-          class="inventario-slots"
-          title="Encontra os 3 itens escondidos no site!"
-        >
-          <div
-            class="slot"
-            data-slot="chave"
-            data-tooltip="Slot Vazio (Loot 1/3)"
-          >
-            <i class="fa-solid fa-question"></i>
-          </div>
-          <div
-            class="slot"
-            data-slot="pergaminho"
-            data-tooltip="Slot Vazio (Loot 2/3)"
-          >
-            <i class="fa-solid fa-question"></i>
-          </div>
-          <div
-            class="slot"
-            data-slot="pocao"
-            data-tooltip="Slot Vazio (Loot 3/3)"
-          >
-            <i class="fa-solid fa-question"></i>
-          </div>
+        <div id="slotsInventario" class="inventario-slots" title="Encontra os 3 itens escondidos no site!">
+          <div class="slot" data-slot="chave" data-tooltip="Slot Vazio (Loot 1/3)"><i class="fa-solid fa-question"></i></div>
+          <div class="slot" data-slot="pergaminho" data-tooltip="Slot Vazio (Loot 2/3)"><i class="fa-solid fa-question"></i></div>
+          <div class="slot" data-slot="pocao" data-tooltip="Slot Vazio (Loot 3/3)"><i class="fa-solid fa-question"></i></div>
         </div>
       </div>
       <button id="btnToggleTema" class="btn-toggle-tema hidden">
@@ -158,112 +126,40 @@
       </button>
     </aside>
 
-    <div
-      id="notificacao"
-      class="notificacao hidden"
-      role="alert"
-      aria-live="assertive"
-    >
+    <div id="notificacao" class="notificacao hidden" role="alert" aria-live="assertive">
       <i class="fa-solid fa-trophy"></i>
       <span id="textoNotificacao"></span>
     </div>
 
     <aside id="miniMapa" class="mini-mapa" aria-label="Mini Mapa das Fases">
       <div class="mapa-linha"></div>
-
-      <a
-        href="#inicio"
-        class="mapa-ponto"
-        data-fase="inicio"
-        title="Fase Inicial"
-      >
-        <i class="fa-solid fa-house"></i>
-      </a>
-      <a
-        href="#formacao"
-        class="mapa-ponto"
-        data-fase="formacao"
-        title="Fase 1: Formação"
-      >
-        <i class="fa-solid fa-graduation-cap"></i>
-      </a>
-      <a
-        href="#experiencias"
-        class="mapa-ponto"
-        data-fase="experiencias"
-        title="Fase 2: Missões"
-      >
-        <i class="fa-solid fa-briefcase"></i>
-      </a>
-      <a
-        href="#projetos"
-        class="mapa-ponto"
-        data-fase="projetos"
-        title="Fase 3: Bosses"
-      >
-        <i class="fa-solid fa-dragon"></i>
-      </a>
-      <a
-        href="#skills"
-        class="mapa-ponto"
-        data-fase="skills"
-        title="Fase 4: Habilidades"
-      >
-        <i class="fa-solid fa-sitemap"></i>
-      </a>
-      <a
-        href="#contato"
-        class="mapa-ponto"
-        data-fase="contato"
-        title="Fim da Jornada"
-      >
-        <i class="fa-solid fa-flag-checkered"></i>
-      </a>
+      <a href="#inicio" class="mapa-ponto" data-fase="inicio" title="Fase Inicial"><i class="fa-solid fa-house"></i></a>
+      <a href="#formacao" class="mapa-ponto" data-fase="formacao" title="Fase 1: Formação"><i class="fa-solid fa-graduation-cap"></i></a>
+      <a href="#experiencias" class="mapa-ponto" data-fase="experiencias" title="Fase 2: Missões"><i class="fa-solid fa-briefcase"></i></a>
+      <a href="#projetos" class="mapa-ponto" data-fase="projetos" title="Fase 3: Bosses"><i class="fa-solid fa-dragon"></i></a>
+      <a href="#skills" class="mapa-ponto" data-fase="skills" title="Fase 4: Habilidades"><i class="fa-solid fa-sitemap"></i></a>
+      <a href="#contato" class="mapa-ponto" data-fase="contato" title="Fim da Jornada"><i class="fa-solid fa-flag-checkered"></i></a>
     </aside>
 
     <main>
       <section id="inicio" class="fase inicio">
-        <i
-          class="fa-solid fa-key loot-item"
-          id="loot-chave"
-          onclick="coletarLoot('chave')"
-          title="Objeto Misterioso..."
-        ></i>
+        <i class="fa-solid fa-key loot-item" id="loot-chave" role="button" tabindex="0" onclick="coletarLoot('chave')" onkeydown="if(event.key==='Enter') coletarLoot('chave')" aria-label="Coletar Chave Dourada" title="Objeto Misterioso..."></i>
+        
         <div class="card player-card">
-          <img
-            src="img/Perfil.png"
-            alt="Avatar em pixel art do desenvolvedor Lucas"
-            class="avatar"
-          />
-
+          <img src="img/Perfil.png" alt="Avatar em pixel art do desenvolvedor Lucas" class="avatar" />
           <h2 id="saudacao">Bem-vindo, aventureiro!</h2>
-
           <h3 class="glitch-text" data-text="Lucas Santos">Lucas Santos</h3>
-
           <p class="bio">
-            Desenvolvedor em formação, apaixonado por tecnologia, dados e
-            inovação. Nesta jornada, você conhecerá minhas habilidades, projetos
-            e conquistas.
+            Desenvolvedor em formação, apaixonado por tecnologia, dados e inovação. Nesta jornada, você conhecerá minhas habilidades, projetos e conquistas.
           </p>
-
-          <button id="startGame" class="btn-acao">
-            <i class="fa-solid fa-play"></i> Iniciar Jornada
-          </button>
+          <button id="startGame" class="btn-acao"><i class="fa-solid fa-play"></i> Iniciar Jornada</button>
         </div>
       </section>
 
       <section id="formacao" class="fase">
         <header class="fase-header">
-          <h2>
-            <i class="fa-solid fa-graduation-cap"></i> Fase 1 — Formação
-            Acadêmica
-          </h2>
-          <i
-            class="fa-solid fa-scroll loot-item"
-            id="loot-pergaminho"
-            onclick="coletarLoot('pergaminho')"
-            title="Objeto Misterioso..."
-          ></i>
+          <h2><i class="fa-solid fa-graduation-cap"></i> Fase 1 — Formação Acadêmica</h2>
+          <i class="fa-solid fa-scroll loot-item" id="loot-pergaminho" role="button" tabindex="0" onclick="coletarLoot('pergaminho')" onkeydown="if(event.key==='Enter') coletarLoot('pergaminho')" aria-label="Coletar Pergaminho Antigo" title="Objeto Misterioso..."></i>
         </header>
         <div id="listaFormacao" class="grid"></div>
       </section>
@@ -271,49 +167,32 @@
       <div id="npcHelper" class="npc-container">
         <div id="npcBalao" class="npc-balao hidden">
           <p id="npcTexto">Saudações! Eu sou o Guia da Jornada.</p>
-          <button id="fecharNpc" class="btn-fechar-npc">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+          <button id="fecharNpc" class="btn-fechar-npc" aria-label="Fechar fala do guia"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div id="npcSprite" class="npc-sprite" aria-label="Falar com o NPC">
+        <div id="npcSprite" class="npc-sprite" aria-label="Falar com o NPC" role="button" tabindex="0">
           <img src="img/npc.png" alt="Mago Guia" class="npc-img" />
         </div>
       </div>
 
       <section id="experiencias" class="fase">
         <header class="fase-header">
-          <h2>
-            <i class="fa-solid fa-briefcase"></i> Fase 2 — Experiências
-            Profissionais (Missões)
-          </h2>
+          <h2><i class="fa-solid fa-briefcase"></i> Fase 2 — Experiências Profissionais (Missões)</h2>
         </header>
 
         <div class="timeline">
           <div class="timeline-item">
-            <div class="timeline-icon">
-              <i class="fa-solid fa-user-tie"></i>
-            </div>
+            <div class="timeline-icon"><i class="fa-solid fa-user-tie"></i></div>
             <div class="timeline-content card">
               <h4>Consultor de TI — Freelancer</h4>
               <p class="muted">09/2025 – Atual</p>
               <ul class="details">
                 <li>Mapeamento de processos e automação operacional.</li>
-                <li>
-                  Criação de sistemas e planilhas automatizadas para controle de
-                  vendas e contratos.
-                </li>
-                <li>
-                  Implantação de ferramentas digitais para gestão e comunicação.
-                </li>
-                <li>
-                  Desenvolvimento de rotinas automatizadas para relatórios e
-                  propostas.
-                </li>
+                <li>Criação de sistemas e planilhas automatizadas para controle de vendas e contratos.</li>
+                <li>Implantação de ferramentas digitais para gestão e comunicação.</li>
+                <li>Desenvolvimento de rotinas automatizadas para relatórios e propostas.</li>
                 <li>Treinamento e suporte técnico contínuo às equipes.</li>
               </ul>
-              <button class="toggle-btn">
-                <i class="fa-solid fa-eye"></i> Ver mais detalhes
-              </button>
+              <button class="toggle-btn" aria-expanded="false"><i class="fa-solid fa-eye"></i> Ver mais detalhes</button>
             </div>
           </div>
 
@@ -323,38 +202,25 @@
               <h4>Criação de Planilhas Automatizadas — Freelancer</h4>
               <p class="muted">05/2025 – Temporário</p>
               <ul class="details">
-                <li>
-                  Dashboards e planilhas interativas com fórmulas avançadas.
-                </li>
+                <li>Dashboards e planilhas interativas com fórmulas avançadas.</li>
                 <li>Integração de dados e automação de processos manuais.</li>
-                <li>
-                  Suporte e treinamento para uso eficiente das ferramentas
-                  criadas.
-                </li>
+                <li>Suporte e treinamento para uso eficiente das ferramentas criadas.</li>
               </ul>
-              <button class="toggle-btn">
-                <i class="fa-solid fa-eye"></i> Ver mais detalhes
-              </button>
+              <button class="toggle-btn" aria-expanded="false"><i class="fa-solid fa-eye"></i> Ver mais detalhes</button>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-icon">
-              <i class="fa-solid fa-helmet-safety"></i>
-            </div>
+            <div class="timeline-icon"><i class="fa-solid fa-helmet-safety"></i></div>
             <div class="timeline-content card">
               <h4>Estagiário Administrativo — Construtora Reflora</h4>
               <p class="muted">07/2023 – 09/2023</p>
               <ul class="details">
                 <li>Suporte na coleta e análise de dados de projetos.</li>
-                <li>
-                  Criação e atualização de relatórios e planilhas de desempenho.
-                </li>
+                <li>Criação e atualização de relatórios e planilhas de desempenho.</li>
                 <li>Gestão de dados e manutenção de sistemas internos.</li>
               </ul>
-              <button class="toggle-btn">
-                <i class="fa-solid fa-eye"></i> Ver mais detalhes
-              </button>
+              <button class="toggle-btn" aria-expanded="false"><i class="fa-solid fa-eye"></i> Ver mais detalhes</button>
             </div>
           </div>
         </div>
@@ -362,24 +228,14 @@
 
       <section id="projetos" class="fase">
         <header class="fase-header">
-          <h2>
-            <i class="fa-solid fa-dragon"></i> Fase 3 — Projetos (Boss Battles)
-          </h2>
+          <h2><i class="fa-solid fa-dragon"></i> Fase 3 — Projetos (Boss Battles)</h2>
         </header>
 
         <div class="filtros" aria-label="Filtrar projetos por categoria">
-          <button class="btn-filtro btn-acao" data-categoria="todos">
-            <i class="fa-solid fa-layer-group"></i> Todos
-          </button>
-          <button class="btn-filtro" data-categoria="react">
-            <i class="fa-brands fa-react"></i> React
-          </button>
-          <button class="btn-filtro" data-categoria="javascript">
-            <i class="fa-brands fa-js"></i> JavaScript
-          </button>
-          <button class="btn-filtro" data-categoria="desafios">
-            <i class="fa-solid fa-trophy"></i> Desafios
-          </button>
+          <button class="btn-filtro btn-acao" data-categoria="todos"><i class="fa-solid fa-layer-group"></i> Todos</button>
+          <button class="btn-filtro" data-categoria="react"><i class="fa-brands fa-react"></i> React</button>
+          <button class="btn-filtro" data-categoria="javascript"><i class="fa-brands fa-js"></i> JavaScript</button>
+          <button class="btn-filtro" data-categoria="desafios"><i class="fa-solid fa-trophy"></i> Desafios</button>
         </div>
 
         <div id="listaProjetos" class="grid"></div>
@@ -387,9 +243,7 @@
 
       <section id="skills" class="fase">
         <header class="fase-header">
-          <h2>
-            <i class="fa-solid fa-sitemap"></i> Fase 4 — Árvore de Habilidades
-          </h2>
+          <h2><i class="fa-solid fa-sitemap"></i> Fase 4 — Árvore de Habilidades</h2>
         </header>
         <div id="listaSkills" class="grid"></div>
       </section>
@@ -397,59 +251,20 @@
       <section id="contato" class="fase final fullscreen-fase">
         <div class="card player-card final-card">
           <header class="fase-header">
-            <h2>
-              <i class="fa-solid fa-flag-checkered"></i> Jornada Concluída
-            </h2>
+            <h2><i class="fa-solid fa-flag-checkered"></i> Jornada Concluída</h2>
           </header>
-
           <p class="bio">
-            Parabéns por chegar até aqui! Quer iniciar uma nova quest juntos?
-            Escolha seu canal de comunicação:
+            Parabéns por chegar até aqui! Quer iniciar uma nova quest juntos? Escolha seu canal de comunicação:
           </p>
 
           <div class="contact-buttons">
-            <a
-              href="https://wa.me/5512981718913"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn contact-btn whatsapp"
-              title="WhatsApp"
-            >
-              <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
-
-            <a
-              href="https://github.com/tirolasca"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn contact-btn github"
-              title="GitHub"
-            >
-              <i class="fab fa-github"></i> GitHub
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/lucas-santostec/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn contact-btn linkedin"
-              title="LinkedIn"
-            >
-              <i class="fab fa-linkedin"></i> LinkedIn
-            </a>
-
-            <a
-              href="mailto:lucasnascimento1245@gmail.com"
-              class="btn contact-btn email"
-              title="E-mail"
-            >
-              <i class="fa-solid fa-envelope"></i> E-mail
-            </a>
+            <a href="https://wa.me/5512981718913" target="_blank" rel="noopener noreferrer" class="btn contact-btn whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="https://github.com/tirolasca" target="_blank" rel="noopener noreferrer" class="btn contact-btn github" title="GitHub"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://www.linkedin.com/in/lucas-santostec/" target="_blank" rel="noopener noreferrer" class="btn contact-btn linkedin" title="LinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</a>
+            <a href="mailto:lucasnascimento1245@gmail.com" class="btn contact-btn email" title="E-mail"><i class="fa-solid fa-envelope"></i> E-mail</a>
           </div>
 
-          <button id="resetJornada" class="btn-reset">
-            <i class="fa-solid fa-rotate-left"></i> Resetar Jornada
-          </button>
+          <button id="resetJornada" class="btn-reset"><i class="fa-solid fa-rotate-left"></i> Resetar Jornada</button>
         </div>
       </section>
     </main>
@@ -457,28 +272,29 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <i
-            class="fa-solid fa-flask loot-item"
-            id="loot-pocao"
-            onclick="coletarLoot('pocao')"
-            title="Objeto Misterioso..."
-          ></i>
-          <a
-            href="https://lucastec.vercel.app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="img/LogoNome.png"
-              alt="Logo Lucas Santos"
-              class="footer-logo"
-            />
+          <i class="fa-solid fa-flask loot-item" id="loot-pocao" role="button" tabindex="0" onclick="coletarLoot('pocao')" onkeydown="if(event.key==='Enter') coletarLoot('pocao')" aria-label="Coletar Poção de Mana" title="Objeto Misterioso..."></i>
+          <a href="https://lucastec.vercel.app" target="_blank" rel="noopener noreferrer">
+            <img src="img/LogoNome.png" alt="Logo Lucas Santos" class="footer-logo" />
           </a>
           <p><span class="divisor">|</span>Todos os direitos reservados.</p>
         </div>
       </div>
+      <div style="text-align: center; margin-top: 1rem; opacity: 0.1; font-size: 0.7rem; letter-spacing: 2px;">
+        <span aria-hidden="true" title="Apenas dev's reais conhecem este código...">↑ ↑ ↓ ↓ ← → ← → B A</span>
+      </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
+    
+    <script>
+      window.addEventListener("load", () => {
+        const preloader = document.getElementById("preloader");
+        if(preloader) {
+          preloader.style.opacity = "0";
+          setTimeout(() => preloader.remove(), 500); // Remove do HTML após o fade
+        }
+      });
+    </script>
   </body>
 </html>
