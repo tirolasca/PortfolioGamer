@@ -114,12 +114,14 @@ function mostrarAnimacaoXP(pontos, x, y) {
   xpDiv.className = "xp-flutuante";
   xpDiv.textContent = `+${pontos} XP`;
   
-  // Posiciona a div onde o mouse clicou ou no centro da tela se for por scroll
+  // Posiciona a div onde o mouse clicou ou no centro da tela
   xpDiv.style.left = `${x || window.innerWidth / 2}px`;
   xpDiv.style.top = `${y || window.scrollY + window.innerHeight / 2}px`;
   
   document.body.appendChild(xpDiv);
-  setTimeout(() => xpDiv.remove(), 1200);
+  
+  // Sincronizado com o novo tempo do CSS (2.5 segundos = 2500ms)
+  setTimeout(() => xpDiv.remove(), 2500); 
 }
 
 function adicionarXP(pontos) {

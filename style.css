@@ -176,30 +176,39 @@ main {
 }
 
 .xp-flutuante {
-  position: fixed; /* Alterado de absolute para fixed para ignorar overflow e não esticar a tela */
+  position: fixed; 
   color: var(--accent-color);
   font-family: var(--font-titulo);
   font-size: 1.5rem;
   font-weight: bold;
-  pointer-events: none; /* O mouse passa direto por ele, não trava a tela */
-  z-index: 999999; /* Z-index máximo para ficar acima do modal e do nav */
+  pointer-events: none; 
+  z-index: 999999; 
   text-shadow: 0 0 10px var(--accent-color), 0 0 20px #fff;
-  animation: floatUpXP 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  /* Tempo aumentado para 2.5s */
+  animation: floatUpXP 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-/* Animação: Dá um pulinho, sobe e some */
+/* Animação: Dá o pulo rápido, segura na tela subindo devagar e só some no final */
 @keyframes floatUpXP {
   0% {
     opacity: 0;
     transform: translate(-50%, 0) scale(0.5);
   }
-  20% {
+  15% { /* Pula e cresce rápido */
     opacity: 1;
-    transform: translate(-50%, -20px) scale(1.2);
+    transform: translate(-50%, -30px) scale(1.2);
   }
-  100% {
+  30% { /* Volta ao tamanho normal */
+    opacity: 1;
+    transform: translate(-50%, -50px) scale(1);
+  }
+  80% { /* Fica visível até os 80% do tempo subindo devagar */
+    opacity: 1;
+    transform: translate(-50%, -100px) scale(1);
+  }
+  100% { /* Desaparece suavemente no topo */
     opacity: 0;
-    transform: translate(-50%, -120px) scale(1);
+    transform: translate(-50%, -140px) scale(1);
     filter: blur(2px);
   }
 }
