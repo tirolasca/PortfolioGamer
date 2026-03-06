@@ -42,11 +42,15 @@ const formacoes = [
   { curso: "Redes de Computadores", instituicao: "SENAC", periodo: "Concluído" },
 ];
 
-const projetos = [
-  { nome: "Planet Spotter", descricao: "Aplicação web desenvolvida no NASA Space Apps para visualização de exoplanetas.", tecnologias: ["HTML", "CSS", "JavaScript"], categoria: "desafios", link: "https://nasasjc.vercel.app" },
-  { nome: "Tempero da Casa", descricao: "Cardápio digital responsivo para visualização de pratos e categorias.", tecnologias: ["HTML", "CSS", "JavaScript"], categoria: "javascript", link: "https://temperodacasa.vercel.app" },
-  { nome: "TaskMaster", descricao: "Gerenciador de tarefas moderno com React, TypeScript e drag & drop.", tecnologias: ["React", "TypeScript", "Vite"], categoria: "react", link: "https://taskmasterbr.vercel.app" },
+// Os seus projetos originais ficam salvos aqui:
+const projetosBase = [
+  { nome: "Planet Spotter", descricao: "Aplicação web desenvolvida no NASA Space Apps...", tecnologias: ["HTML", "CSS", "JavaScript"], categoria: "desafios", link: "https://nasasjc.vercel.app" },
+  { nome: "Tempero da Casa", descricao: "Cardápio digital responsivo...", tecnologias: ["HTML", "CSS", "JavaScript"], categoria: "javascript", link: "https://temperodacasa.vercel.app" },
+  { nome: "TaskMaster", descricao: "Gerenciador de tarefas moderno com React...", tecnologias: ["React", "TypeScript", "Vite"], categoria: "react", link: "https://taskmasterbr.vercel.app" },
 ];
+
+// Essa é a lista que o jogo vai usar (começa só com os base)
+let projetos = [...projetosBase];
 
 const skills = [
   { nome: "HTML / CSS", nivel: 90, icone: "fa-brands fa-html5" },
@@ -105,6 +109,56 @@ function carregarEstado() {
     console.error("Corrompimento de Save State:", error);
   }
 }
+
+// ==========================================
+  // EASTER EGG: PORTA SECRETA DO ADMIN
+  // ==========================================
+  const devLevelText = document.querySelector(".dev-level");
+  const adminOverlay = document.getElementById("adminOverlay");
+  const btnFecharAdmin = document.getElementById("btnFecharAdmin");
+  let cliquesAdmin = 0;
+  let timerCliques = null;
+
+  if (devLevelText && adminOverlay) {
+    devLevelText.style.cursor = "pointer"; // Dá uma dica sutil
+    
+    devLevelText.addEventListener("click", () => {
+      cliquesAdmin++;
+      clearTimeout(timerCliques);
+      
+      // Se clicar 5 vezes rápido, abre o terminal!
+      if (cliquesAdmin >= 5) {
+        adminOverlay.classList.remove("hidden");
+        tocarSom('levelup'); // Toca um som épico ao achar o segredo
+        cliquesAdmin = 0;
+      }
+      
+      // Reseta o contador se demorar muito entre os cliques
+      timerCliques = setTimeout(() => { cliquesAdmin = 0; }, 2000);
+    });
+
+    btnFecharAdmin.addEventListener("click", () => {
+      adminOverlay.classList.add("hidden");
+      tocarSom('click');
+    });
+  }
+
+// ==========================================
+// COMUNICAÇÃO COM A NUVEM (FIREBASE)
+// ==========================================
+window.atualizarProjetosNaTela = function(projetosDaNuvem) {
+  console.log("Nuvem sincronizada! Projetos recebidos:", projetosDaNuvem);
+  
+  // 1. FUNDE os projetos do código com os projetos do Firebase!
+  projetos = [...projetosBase, ...projetosDaNuvem]; 
+  
+  // 2. Manda o motor redesenhar a Fase 3
+  renderProjetos(); 
+  
+  // 3. Força um "clique" no botão de filtro "Todos" para garantir que o projeto novo não fique invisível
+  const btnTodos = document.querySelector('.btn-filtro[data-categoria="todos"]');
+  if (btnTodos) btnTodos.click();
+};
 
 // ==========================================
 // SISTEMA DE EXPERIÊNCIA E LEVEL UP

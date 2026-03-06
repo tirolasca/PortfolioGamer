@@ -101,6 +101,50 @@
       </div>
     </div>
 
+   <div id="adminOverlay" class="quest-overlay hidden" style="z-index: 9999999;">
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <span class="terminal-title"><i class="fa-solid fa-terminal"></i> root@lucas-server:~</span>
+          <button id="btnFecharAdmin" class="btn-fechar-terminal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="terminal-body">
+          <div id="adminLoginArea">
+            <p class="terminal-text">> Status: <span id="statusLogin" class="offline">DESCONECTADO</span></p>
+            <p class="terminal-text">> Insira suas credenciais de administrador:</p>
+            <input type="email" id="adminEmail" placeholder="user@system.com" class="terminal-input" />
+            <input type="password" id="adminSenha" placeholder="********" class="terminal-input" />
+            <button id="btnLoginAdmin" class="btn-terminal"><i class="fa-solid fa-unlock"></i> [ ENTER ]</button>
+          </div>
+
+          <div id="adminPainelArea" class="hidden">
+            <p class="terminal-text">> Status: <span class="online">SESSÃO ATIVA. Bem-vindo de volta, Admin.</span></p>
+            <p class="terminal-text">> Módulo de Injeção de Projetos inicializado:</p>
+            
+            <div class="terminal-form">
+              <input type="text" id="novoProjNome" placeholder="Nome do Projeto (Ex: Pokedex)" class="terminal-input" />
+              <textarea id="novoProjDesc" placeholder="Descrição curta do projeto..." class="terminal-input" rows="2"></textarea>
+              <input type="text" id="novoProjTechs" placeholder="Techs separadas por vírgula (Ex: HTML, CSS, JS)" class="terminal-input" />
+              
+              <div class="terminal-row">
+                <select id="novoProjCat" class="terminal-input">
+                  <option value="react">React</option>
+                  <option value="javascript">JavaScript</option>
+                  <option value="desafios">Desafios</option>
+                </select>
+                <input type="url" id="novoProjLink" placeholder="URL do Projeto (https://...)" class="terminal-input" />
+              </div>
+            </div>
+            
+            <div class="terminal-actions">
+              <button id="btnSalvarProj" class="btn-terminal success"><i class="fa-solid fa-cloud-arrow-up"></i> [ DEPLOY ]</button>
+              <button id="btnLogoutAdmin" class="btn-terminal danger"><i class="fa-solid fa-power-off"></i> [ LOGOUT ]</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="progresso-jornada" aria-hidden="true" title="Barra de Experiência (XP)">
       <div id="barraProgresso"></div>
     </div>
@@ -289,6 +333,199 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
+
+    <script>
+      window.addEventListener("load", () => {
+        const preloader = document.getElementById("insertCoinScreen");
+        if(preloader) {
+          // preloader.style.opacity = "0";
+          // setTimeout(() => preloader.remove(), 500);
+        }
+      });
+    </script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+      import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB6IhekSnJ948pQe5gjtAhd_cwcuWiS4vE",
+        authDomain: "portfoliogamer-1ede9.firebaseapp.com",
+        projectId: "portfoliogamer-1ede9",
+        storageBucket: "portfoliogamer-1ede9.firebasestorage.app",
+        messagingSenderId: "262891468883",
+        appId: "1:262891468883:web:36206528ec7aeed5612ea6"
+      };
+
+      // Inicializa os serviços
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Elementos do Terminal
+      const adminLoginArea = document.getElementById('adminLoginArea');
+      const adminPainelArea = document.getElementById('adminPainelArea');
+      const btnLoginAdmin = document.getElementById('btnLoginAdmin');
+      const btnLogoutAdmin = document.getElementById('btnLogoutAdmin');
+      const btnSalvarProj = document.getElementById('btnSalvarProj');
+
+      // 1. Observador de Autenticação (Olheiro do Servidor)
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          adminLoginArea.classList.add('hidden');
+          adminPainelArea.classList.remove('hidden');
+        } else {
+          adminLoginArea.classList.remove('hidden');
+          adminPainelArea.classList.add('hidden');
+        }
+      });
+
+      // 2. Fazer Login
+    btnLoginAdmin.addEventListener('click', () => {
+        const email = document.getElementById('adminEmail').value;
+        const senha = document.getElementById('adminSenha').value;
+        const btnOriginalText = btnLoginAdmin.innerHTML;
+        const statusLogin = document.getElementById('statusLogin'); // Captura o texto de status
+        
+        // Inicia a animação de loading no botão
+        btnLoginAdmin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> [ AUTENTICANDO... ]';
+        btnLoginAdmin.style.pointerEvents = 'none'; 
+        btnLoginAdmin.style.borderColor = '#eab308'; 
+        btnLoginAdmin.style.color = '#eab308';
+
+        // Muda o status lá no topo para amarelo!
+        if (statusLogin) {
+          statusLogin.innerHTML = '<i class="fa-solid fa-satellite-dish fa-fade"></i> ESTABELECENDO CONEXÃO...';
+          statusLogin.style.color = '#eab308';
+        }
+
+        signInWithEmailAndPassword(auth, email, senha)
+          .then(() => {
+            // Sucesso! Botão e Status ficam Verdes
+            btnLoginAdmin.innerHTML = '<i class="fa-solid fa-unlock"></i> [ ACESSO CONCEDIDO ]';
+            btnLoginAdmin.style.borderColor = '#10b981';
+            btnLoginAdmin.style.color = '#10b981';
+            
+            if (statusLogin) {
+              statusLogin.innerHTML = 'CONECTADO';
+              statusLogin.style.color = '#10b981';
+            }
+            
+            setTimeout(() => {
+              // Limpa os campos e reseta as cores silenciosamente para quando você deslogar
+              document.getElementById('adminEmail').value = '';
+              document.getElementById('adminSenha').value = '';
+              btnLoginAdmin.innerHTML = btnOriginalText;
+              btnLoginAdmin.style = ''; 
+              if (statusLogin) {
+                statusLogin.innerHTML = 'DESCONECTADO';
+                statusLogin.style.color = '#ef4444';
+              }
+            }, 1000);
+          })
+          .catch((error) => {
+            // Erro! Botão e Status ficam Vermelhos
+            btnLoginAdmin.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> [ ACESSO NEGADO ]';
+            btnLoginAdmin.style.borderColor = '#ef4444';
+            btnLoginAdmin.style.color = '#ef4444';
+            
+            if (statusLogin) {
+              statusLogin.innerHTML = 'FALHA DE CREDENCIAIS';
+              statusLogin.style.color = '#ef4444';
+            }
+            
+            setTimeout(() => {
+              btnLoginAdmin.innerHTML = btnOriginalText;
+              btnLoginAdmin.style = '';
+              if (statusLogin) {
+                statusLogin.innerHTML = 'DESCONECTADO';
+                statusLogin.style.color = '#ef4444';
+              }
+            }, 2000);
+          });
+      });
+
+      // 4. Salvar Novo Projeto (Animação de Deploy)
+      btnSalvarProj.addEventListener('click', async () => {
+        const nome = document.getElementById('novoProjNome').value;
+        const desc = document.getElementById('novoProjDesc').value;
+        const techs = document.getElementById('novoProjTechs').value;
+        const cat = document.getElementById('novoProjCat').value;
+        const link = document.getElementById('novoProjLink').value;
+
+        if(!nome || !desc || !techs || !link) {
+          alert("SISTEMA: Preencha todos os parâmetros do pacote antes do Deploy.");
+          return;
+        }
+
+        const btnOriginalText = btnSalvarProj.innerHTML;
+        
+        // Modo "Transferindo Dados"
+        btnSalvarProj.innerHTML = '<i class="fa-solid fa-network-wired fa-fade"></i> [ UPLOAD EM ANDAMENTO... ]';
+        btnSalvarProj.style.pointerEvents = 'none';
+
+        try {
+          // Envia para o banco de dados
+          await addDoc(collection(db, "projetos"), {
+            nome: nome,
+            descricao: desc,
+            tecnologias: techs.split(',').map(t => t.trim()),
+            categoria: cat,
+            link: link
+          });
+          
+          // Modo "Sucesso"
+          btnSalvarProj.innerHTML = '<i class="fa-solid fa-check-double"></i> [ DEPLOY CONCLUÍDO ]';
+          btnSalvarProj.style.boxShadow = '0 0 20px #10b981';
+          
+          // Esvazia os campos
+          document.getElementById('novoProjNome').value = '';
+          document.getElementById('novoProjDesc').value = '';
+          document.getElementById('novoProjTechs').value = '';
+          document.getElementById('novoProjLink').value = '';
+          
+          carregarProjetosDoBanco(); // Puxa o projeto novo pra tela
+          
+          // Volta o botão ao normal depois de 2 segundos
+          setTimeout(() => {
+            btnSalvarProj.innerHTML = btnOriginalText;
+            btnSalvarProj.style = '';
+          }, 2000);
+          
+        } catch (e) {
+          btnSalvarProj.innerHTML = '<i class="fa-solid fa-bug"></i> [ FALHA NO UPLOAD ]';
+          btnSalvarProj.style.borderColor = '#ef4444';
+          btnSalvarProj.style.color = '#ef4444';
+          
+          setTimeout(() => {
+            btnSalvarProj.innerHTML = btnOriginalText;
+            btnSalvarProj.style = '';
+          }, 2500);
+        }
+      });
+
+      async function carregarProjetosDoBanco() {
+        try {
+          const querySnapshot = await getDocs(collection(db, "projetos"));
+          const projetosDoBanco = [];
+          
+          querySnapshot.forEach((doc) => {
+            projetosDoBanco.push(doc.data());
+          });
+
+          // Se tiver projeto no banco, manda pro script.js renderizar
+          if (projetosDoBanco.length > 0 && typeof window.atualizarProjetosNaTela === 'function') {
+             window.atualizarProjetosNaTela(projetosDoBanco);
+          }
+        } catch (error) {
+          console.error("SISTEMA: Falha ao varrer o banco de dados.", error);
+        }
+      }
+
+      // Executa a varredura inicial assim que o site carrega
+      carregarProjetosDoBanco();
+    </script>
     
    
   </body>
