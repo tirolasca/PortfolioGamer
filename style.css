@@ -187,9 +187,9 @@ button:focus-visible {
 }
 
 .btn-terminal:hover {
-  background: #0ff;
-  color: #000;
-  box-shadow: 0 0 15px #0ff;
+  background: rgba(229, 255, 0, 0.15); /* Fundo levemente preenchido em vez de sólido */
+  color: #000; /* Texto branco para um contraste mais suave */
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4); /* Brilho reduzido pela metade e mais transparente */
 }
 
 .terminal-actions {
@@ -203,6 +203,127 @@ button:focus-visible {
 
 .btn-terminal.danger { border-color: #ef4444; color: #ef4444; }
 .btn-terminal.danger:hover { background: #ef4444; color: #000; box-shadow: 0 0 15px #ef4444; }
+
+.terminal-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terminal-box::-webkit-scrollbar-track {
+  background: rgba(10, 15, 20, 0.95);
+  border-left: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.terminal-box::-webkit-scrollbar-thumb {
+  background: #0ff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.terminal-box::-webkit-scrollbar-thumb:hover {
+  background: #fff;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.item-delete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 0.4rem;
+  border-radius: 4px;
+}
+
+.item-delete-titulo {
+  color: #fff;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+}
+
+.btn-deletar-item {
+  background: #ef4444;
+  color: #000;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.btn-deletar-item:hover {
+  background: #fff;
+  box-shadow: 0 0 10px #ef4444;
+}
+
+select.terminal-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(0, 255, 255, 0.05);
+  border: 1px solid #0ff;
+  color: #0ff;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+  /* Seta customizada via código SVG direto no CSS */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300ffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2em;
+  transition: all 0.3s ease;
+  text-align-last: center; /* Centraliza o texto no Chrome/Edge */
+}
+
+/* Fundo escuro nas opções quando a lista abre */
+select.terminal-input option {
+  background-color: #0a0f14;
+  color: #0ff;
+  font-weight: bold;
+}
+
+/* 2. Select Principal de Injeção (Módulo - Amarelo/Dourado) */
+#tipoDado {
+  background-color: rgba(234, 179, 8, 0.1) !important;
+  border-color: #eab308 !important;
+  color: #eab308 !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23eab308' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+#tipoDado:focus, 
+#tipoDado:hover {
+  background-color: rgba(234, 179, 8, 0.2) !important;
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.4), inset 0 0 10px rgba(234, 179, 8, 0.2) !important;
+  outline: none;
+}
+
+#tipoDado option { color: #eab308; }
+
+/* 3. Select de Exclusão (Lixeira - Vermelho) */
+#tipoExclusao {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  border-color: #ef4444 !important;
+  color: #ef4444 !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  margin-bottom: 0 !important;
+}
+
+#tipoExclusao:focus, 
+#tipoExclusao:hover {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(239, 68, 68, 0.2) !important;
+  outline: none;
+}
+
+#tipoExclusao option { color: #ef4444; }
 
 main {
   margin-top: 100px;
@@ -392,6 +513,13 @@ main {
 }
 
 .hud-nav {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center 0;
+  /* Borda sutil para parecer uma tela de vidro */
+  border-left: 1px solid rgba(0, 255, 255, 0.1);
   display: flex;
   gap: 1.5rem;
   align-items: center;
@@ -777,7 +905,8 @@ button:active, .btn-batalha:active {
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+ will-change: transform;
+  transition: background-color 0.3s, box-shadow 0.3s !important;
   cursor: pointer;
   position: relative;
 }
@@ -1170,6 +1299,13 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   .inventario-slots .slot[data-tooltip]:hover::before {
     transform: translateX(-50%) translateY(0) !important;
   }
+
+ .terminal-box {
+    width: 85%;
+    max-width: 500px;
+    height: 90%; /* O limite que você definiu */
+    overflow-y: auto; /* A MÁGICA: Cria a barra de rolagem vertical! */
+  }
 }
 
 @media (max-width: 768px) {
@@ -1227,5 +1363,47 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   .slot[data-tooltip]:hover::after, 
   .slot[data-tooltip]:hover::before {
     transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .terminal-box {
+    width: 95%;
+    /* Se o formulário ficar muito grande, cria um scroll dentro do próprio terminal */
+    max-height: 85vh; 
+    overflow-y: auto; 
+  }
+
+  .terminal-header {
+    padding: 0.8rem;
+  }
+
+  .terminal-title {
+    font-size: 0.75rem; /* Diminui a fonte do "root@lucas-server" pra não quebrar a linha */
+  }
+
+  .terminal-body {
+    padding: 1rem; /* Ganha um pouco mais de espaço útil nas bordas */
+  }
+
+  /* Quebra a linha de "Categoria e URL" para ficarem um embaixo do outro */
+  .terminal-row {
+    flex-direction: column;
+    gap: 0; /* O gap é zerado porque o margin-bottom do input já faz o espaçamento */
+  }
+
+  /* Empilha os botões de Salvar e Sair e aumenta a área de clique para o dedo */
+  .terminal-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .btn-terminal {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  /* Mantém o efeito CRT (scanlines) fixo no fundo mesmo se o usuário rolar a tela */
+  .terminal-body::before {
+    position: fixed;
   }
 }

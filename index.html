@@ -119,28 +119,79 @@
 
           <div id="adminPainelArea" class="hidden">
             <p class="terminal-text">> Status: <span class="online">SESSÃO ATIVA. Bem-vindo de volta, Admin.</span></p>
-            <p class="terminal-text">> Módulo de Injeção de Projetos inicializado:</p>
+            <p class="terminal-text">> Selecione o Módulo de Injeção de Dados:</p>
             
+            <select id="tipoDado" class="terminal-input" style="color: #eab308; border-color: #eab308; font-weight: bold;">
+              <option value="projeto">[ MÓDULO: PROJETO ]</option>
+              <option value="experiencia">[ MÓDULO: EXPERIÊNCIA / MISSÃO ]</option>
+              <option value="formacao">[ MÓDULO: FORMAÇÃO ]</option>
+            </select>
+
             <div class="terminal-form">
-              <input type="text" id="novoProjNome" placeholder="Nome do Projeto (Ex: Pokedex)" class="terminal-input" />
-              <textarea id="novoProjDesc" placeholder="Descrição curta do projeto..." class="terminal-input" rows="2"></textarea>
-              <input type="text" id="novoProjTechs" placeholder="Techs separadas por vírgula (Ex: HTML, CSS, JS)" class="terminal-input" />
-              
-              <div class="terminal-row">
-                <select id="novoProjCat" class="terminal-input">
-                  <option value="react">React</option>
-                  <option value="javascript">JavaScript</option>
-                  <option value="desafios">Desafios</option>
-                </select>
-                <input type="url" id="novoProjLink" placeholder="URL do Projeto (https://...)" class="terminal-input" />
+              <div id="formProjeto" class="modulo-form">
+                <input type="text" id="novoProjNome" placeholder="Nome do Projeto (Ex: Pokedex)" class="terminal-input" />
+                <textarea id="novoProjDesc" placeholder="Descrição curta do projeto..." class="terminal-input" rows="2"></textarea>
+                <input type="text" id="novoProjTechs" placeholder="Techs separadas por vírgula (Ex: HTML, CSS, JS)" class="terminal-input" />
+                <div class="terminal-row">
+                  <select id="novoProjCat" class="terminal-input">
+                    <option value="react">React</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="desafios">Desafios</option>
+                  </select>
+                  <input type="url" id="novoProjLink" placeholder="URL (https://...)" class="terminal-input" />
+                </div>
               </div>
+
+              <div id="formExperiencia" class="modulo-form hidden">
+                <input type="text" id="novaExpTitulo" placeholder="Cargo / Título (Ex: Dev Front-end)" class="terminal-input" />
+                <input type="text" id="novaExpEmpresa" placeholder="Empresa / Local (Ex: Google)" class="terminal-input" />
+                <input type="text" id="novaExpPeriodo" placeholder="Período (Ex: 2023 - Presente)" class="terminal-input" />
+                <textarea id="novaExpDesc" placeholder="Descrição das responsabilidades..." class="terminal-input" rows="2"></textarea>
+              </div>
+
+              <div id="formFormacao" class="modulo-form hidden">
+                <input type="text" id="novaFormCurso" placeholder="Curso (Ex: Análise de Sistemas)" class="terminal-input" />
+                <input type="text" id="novaFormInst" placeholder="Instituição (Ex: FATEC)" class="terminal-input" />
+                <input type="text" id="novaFormPeriodo" placeholder="Período (Ex: 2024 - 2026)" class="terminal-input" />
+              </div>
+            </div>
+
+            <div style="border-top: 1px dashed rgba(0,255,255,0.3); margin: 1.5rem 0;"></div>
+            <p class="terminal-text">> Módulo de Exclusão de Dados:</p>
+            
+            <div class="terminal-row" style="margin-bottom: 0.5rem;">
+              <select id="tipoExclusao" class="terminal-input" style="color: #ef4444; border-color: #ef4444; margin-bottom: 0;">
+                <option value="projetos">[ ALVO: PROJETOS ]</option>
+                <option value="experiencias">[ ALVO: EXPERIÊNCIAS ]</option>
+                <option value="formacoes">[ ALVO: FORMAÇÕES ]</option>
+              </select>
+              <button id="btnCarregarExclusao" class="btn-terminal" style="border-color: #eab308; color: #eab308; width: auto;"><i class="fa-solid fa-magnifying-glass"></i> LER BANCO</button>
+            </div>
+            
+            <div id="listaExclusao" style="max-height: 140px; overflow-y: auto; margin-bottom: 1rem;">
+              <p style="color: var(--text-secondary); font-size: 0.8rem;">Clique em 'LER BANCO' para buscar os registros da nuvem.</p>
             </div>
             
             <div class="terminal-actions">
-              <button id="btnSalvarProj" class="btn-terminal success"><i class="fa-solid fa-cloud-arrow-up"></i> [ DEPLOY ]</button>
+              <button id="btnSalvarDado" class="btn-terminal success"><i class="fa-solid fa-cloud-arrow-up"></i> [ DEPLOY ]</button>
               <button id="btnLogoutAdmin" class="btn-terminal danger"><i class="fa-solid fa-power-off"></i> [ LOGOUT ]</button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="githubOverlay" class="quest-overlay hidden" style="z-index: 99999;">
+      <div class="terminal-box" style="border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); max-width: 400px;">
+        <div class="terminal-header" style="border-bottom-color: #a855f7;">
+          <span class="terminal-title" style="color: #a855f7;"><i class="fa-solid fa-satellite-dish"></i> SATÉLITE GITHUB ABERTO</span>
+          <button id="fecharGithub" class="btn-fechar-terminal" style="color: #a855f7;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="terminal-body" id="githubTela" style="text-align: center; padding: 2rem;">
+          <p class="terminal-text" style="color: #a855f7;">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Estabelecendo conexão com api.github.com...
+          </p>
         </div>
       </div>
     </div>
@@ -226,7 +277,7 @@
           <h2><i class="fa-solid fa-briefcase"></i> Fase 2 — Experiências Profissionais (Missões)</h2>
         </header>
 
-        <div class="timeline">
+       <div class="timeline" id="listaExperiencias">
           <div class="timeline-item">
             <div class="timeline-icon"><i class="fa-solid fa-user-tie"></i></div>
             <div class="timeline-content card">
@@ -277,6 +328,7 @@
         <header class="fase-header">
           <h2><i class="fa-solid fa-dragon"></i> Fase 3 — Projetos (Boss Battles)</h2>
         </header>
+       
 
         <div class="filtros" aria-label="Filtrar projetos por categoria">
           <button class="btn-filtro btn-acao" data-categoria="todos"><i class="fa-solid fa-layer-group"></i> Todos</button>
@@ -286,6 +338,7 @@
         </div>
 
         <div id="listaProjetos" class="grid"></div>
+        
       </section>
 
       <section id="skills" class="fase">
@@ -306,7 +359,9 @@
 
           <div class="contact-buttons">
             <a href="https://wa.me/5512981718913" target="_blank" rel="noopener noreferrer" class="btn contact-btn whatsapp" title="WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-            <a href="https://github.com/tirolasca" target="_blank" rel="noopener noreferrer" class="btn contact-btn github" title="GitHub"><i class="fab fa-github"></i> GitHub</a>
+            <a id="btnRastreioGithub" class="btn contact-btn github" title="GitHub" style="cursor: pointer;">
+  <i class="fab fa-github"></i> GitHub
+</a>
             <a href="https://www.linkedin.com/in/lucas-santostec/" target="_blank" rel="noopener noreferrer" class="btn contact-btn linkedin" title="LinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</a>
             <a href="mailto:lucasnascimento1245@gmail.com" class="btn contact-btn email" title="E-mail"><i class="fa-solid fa-envelope"></i> E-mail</a>
           </div>
@@ -344,10 +399,10 @@
       });
     </script>
 
-    <script type="module">
+   <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
       import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-      import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+      import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyB6IhekSnJ948pQe5gjtAhd_cwcuWiS4vE",
@@ -368,7 +423,28 @@
       const adminPainelArea = document.getElementById('adminPainelArea');
       const btnLoginAdmin = document.getElementById('btnLoginAdmin');
       const btnLogoutAdmin = document.getElementById('btnLogoutAdmin');
-      const btnSalvarProj = document.getElementById('btnSalvarProj');
+      const btnSalvarDado = document.getElementById('btnSalvarDado'); // Nome atualizado!
+
+      // Elementos Multi-Módulo (Novos)
+      const tipoDado = document.getElementById('tipoDado');
+      const formProjeto = document.getElementById('formProjeto');
+      const formExperiencia = document.getElementById('formExperiencia');
+      const formFormacao = document.getElementById('formFormacao');
+
+      // Escuta a mudança no Select
+      if(tipoDado) {
+        tipoDado.addEventListener('change', (e) => {
+          // 1. Esconde todo mundo primeiro (Taca o .hidden em todos)
+          if(formProjeto) formProjeto.classList.add('hidden');
+          if(formExperiencia) formExperiencia.classList.add('hidden');
+          if(formFormacao) formFormacao.classList.add('hidden');
+          
+          // 2. Remove o .hidden SÓ daquele que você escolheu
+          if(e.target.value === 'projeto' && formProjeto) formProjeto.classList.remove('hidden');
+          if(e.target.value === 'experiencia' && formExperiencia) formExperiencia.classList.remove('hidden');
+          if(e.target.value === 'formacao' && formFormacao) formFormacao.classList.remove('hidden');
+        });
+      }
 
       // 1. Observador de Autenticação (Olheiro do Servidor)
       onAuthStateChanged(auth, (user) => {
@@ -382,19 +458,17 @@
       });
 
       // 2. Fazer Login
-    btnLoginAdmin.addEventListener('click', () => {
+      btnLoginAdmin.addEventListener('click', () => {
         const email = document.getElementById('adminEmail').value;
         const senha = document.getElementById('adminSenha').value;
         const btnOriginalText = btnLoginAdmin.innerHTML;
-        const statusLogin = document.getElementById('statusLogin'); // Captura o texto de status
+        const statusLogin = document.getElementById('statusLogin'); 
         
-        // Inicia a animação de loading no botão
         btnLoginAdmin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> [ AUTENTICANDO... ]';
         btnLoginAdmin.style.pointerEvents = 'none'; 
         btnLoginAdmin.style.borderColor = '#eab308'; 
         btnLoginAdmin.style.color = '#eab308';
 
-        // Muda o status lá no topo para amarelo!
         if (statusLogin) {
           statusLogin.innerHTML = '<i class="fa-solid fa-satellite-dish fa-fade"></i> ESTABELECENDO CONEXÃO...';
           statusLogin.style.color = '#eab308';
@@ -402,7 +476,6 @@
 
         signInWithEmailAndPassword(auth, email, senha)
           .then(() => {
-            // Sucesso! Botão e Status ficam Verdes
             btnLoginAdmin.innerHTML = '<i class="fa-solid fa-unlock"></i> [ ACESSO CONCEDIDO ]';
             btnLoginAdmin.style.borderColor = '#10b981';
             btnLoginAdmin.style.color = '#10b981';
@@ -413,7 +486,6 @@
             }
             
             setTimeout(() => {
-              // Limpa os campos e reseta as cores silenciosamente para quando você deslogar
               document.getElementById('adminEmail').value = '';
               document.getElementById('adminSenha').value = '';
               btnLoginAdmin.innerHTML = btnOriginalText;
@@ -425,7 +497,6 @@
             }, 1000);
           })
           .catch((error) => {
-            // Erro! Botão e Status ficam Vermelhos
             btnLoginAdmin.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> [ ACESSO NEGADO ]';
             btnLoginAdmin.style.borderColor = '#ef4444';
             btnLoginAdmin.style.color = '#ef4444';
@@ -446,85 +517,209 @@
           });
       });
 
-      // 4. Salvar Novo Projeto (Animação de Deploy)
-      btnSalvarProj.addEventListener('click', async () => {
-        const nome = document.getElementById('novoProjNome').value;
-        const desc = document.getElementById('novoProjDesc').value;
-        const techs = document.getElementById('novoProjTechs').value;
-        const cat = document.getElementById('novoProjCat').value;
-        const link = document.getElementById('novoProjLink').value;
-
-        if(!nome || !desc || !techs || !link) {
-          alert("SISTEMA: Preencha todos os parâmetros do pacote antes do Deploy.");
-          return;
-        }
-
-        const btnOriginalText = btnSalvarProj.innerHTML;
-        
-        // Modo "Transferindo Dados"
-        btnSalvarProj.innerHTML = '<i class="fa-solid fa-network-wired fa-fade"></i> [ UPLOAD EM ANDAMENTO... ]';
-        btnSalvarProj.style.pointerEvents = 'none';
-
-        try {
-          // Envia para o banco de dados
-          await addDoc(collection(db, "projetos"), {
-            nome: nome,
-            descricao: desc,
-            tecnologias: techs.split(',').map(t => t.trim()),
-            categoria: cat,
-            link: link
-          });
-          
-          // Modo "Sucesso"
-          btnSalvarProj.innerHTML = '<i class="fa-solid fa-check-double"></i> [ DEPLOY CONCLUÍDO ]';
-          btnSalvarProj.style.boxShadow = '0 0 20px #10b981';
-          
-          // Esvazia os campos
-          document.getElementById('novoProjNome').value = '';
-          document.getElementById('novoProjDesc').value = '';
-          document.getElementById('novoProjTechs').value = '';
-          document.getElementById('novoProjLink').value = '';
-          
-          carregarProjetosDoBanco(); // Puxa o projeto novo pra tela
-          
-          // Volta o botão ao normal depois de 2 segundos
+      // 3. Fazer Logout (Restaurado e Animado)
+      if (btnLogoutAdmin) {
+        btnLogoutAdmin.addEventListener('click', () => {
+          const btnOriginalText = btnLogoutAdmin.innerHTML;
+          btnLogoutAdmin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> [ ENCERRANDO SESSÃO... ]';
           setTimeout(() => {
-            btnSalvarProj.innerHTML = btnOriginalText;
-            btnSalvarProj.style = '';
-          }, 2000);
-          
-        } catch (e) {
-          btnSalvarProj.innerHTML = '<i class="fa-solid fa-bug"></i> [ FALHA NO UPLOAD ]';
-          btnSalvarProj.style.borderColor = '#ef4444';
-          btnSalvarProj.style.color = '#ef4444';
-          
-          setTimeout(() => {
-            btnSalvarProj.innerHTML = btnOriginalText;
-            btnSalvarProj.style = '';
-          }, 2500);
-        }
-      });
+            signOut(auth).then(() => {
+              btnLogoutAdmin.innerHTML = btnOriginalText;
+            });
+          }, 800);
+        });
+      }
 
-      async function carregarProjetosDoBanco() {
+      // ==========================================
+      // LÓGICA DE MULTI-MÓDULOS (O Cerebro do Admin)
+      // ==========================================
+
+      // Troca os formulários na tela quando escolhe no select
+      if(tipoDado) {
+        tipoDado.addEventListener('change', (e) => {
+          if(formProjeto) formProjeto.classList.add('hidden');
+          if(formExperiencia) formExperiencia.classList.add('hidden');
+          if(formFormacao) formFormacao.classList.add('hidden');
+          
+          if(e.target.value === 'projeto' && formProjeto) formProjeto.classList.remove('hidden');
+          if(e.target.value === 'experiencia' && formExperiencia) formExperiencia.classList.remove('hidden');
+          if(e.target.value === 'formacao' && formFormacao) formFormacao.classList.remove('hidden');
+        });
+      }
+
+      // 4. Salvar Dado (Inteligente)
+      if (btnSalvarDado) {
+        btnSalvarDado.addEventListener('click', async () => {
+          const tipo = tipoDado.value;
+          let dadosParaSalvar = {};
+          let colecaoDestino = "";
+
+          // Coleta os dados dependendo de qual módulo está selecionado
+          if (tipo === 'projeto') {
+            dadosParaSalvar = {
+              nome: document.getElementById('novoProjNome').value,
+              descricao: document.getElementById('novoProjDesc').value,
+              tecnologias: document.getElementById('novoProjTechs').value.split(',').map(t => t.trim()),
+              categoria: document.getElementById('novoProjCat').value,
+              link: document.getElementById('novoProjLink').value
+            };
+            colecaoDestino = "projetos";
+            if(!dadosParaSalvar.nome || !dadosParaSalvar.descricao || !dadosParaSalvar.link) {
+              alert("SISTEMA: Preencha os dados obrigatórios do projeto."); return;
+            }
+          } else if (tipo === 'experiencia') {
+            dadosParaSalvar = {
+              titulo: document.getElementById('novaExpTitulo').value,
+              empresa: document.getElementById('novaExpEmpresa').value,
+              periodo: document.getElementById('novaExpPeriodo').value,
+              descricao: document.getElementById('novaExpDesc').value
+            };
+            colecaoDestino = "experiencias";
+            if(!dadosParaSalvar.titulo || !dadosParaSalvar.empresa || !dadosParaSalvar.periodo) {
+              alert("SISTEMA: Preencha os dados da experiência."); return;
+            }
+          } else if (tipo === 'formacao') {
+            dadosParaSalvar = {
+              curso: document.getElementById('novaFormCurso').value,
+              instituicao: document.getElementById('novaFormInst').value,
+              periodo: document.getElementById('novaFormPeriodo').value
+            };
+            colecaoDestino = "formacoes";
+            if(!dadosParaSalvar.curso || !dadosParaSalvar.instituicao || !dadosParaSalvar.periodo) {
+              alert("SISTEMA: Preencha os dados da formação."); return;
+            }
+          }
+
+          const btnOriginalText = btnSalvarDado.innerHTML;
+          btnSalvarDado.innerHTML = '<i class="fa-solid fa-network-wired fa-fade"></i> [ UPLOAD EM ANDAMENTO... ]';
+          btnSalvarDado.style.pointerEvents = 'none';
+
+          try {
+            await addDoc(collection(db, colecaoDestino), dadosParaSalvar);
+            
+            btnSalvarDado.innerHTML = '<i class="fa-solid fa-check-double"></i> [ DEPLOY CONCLUÍDO ]';
+            btnSalvarDado.style.boxShadow = '0 0 20px #10b981';
+            
+            // Limpa todos os inputs depois de salvar
+            document.querySelectorAll('.modulo-form input, .modulo-form textarea').forEach(input => input.value = '');
+            
+            // Atualiza a tela puxando do banco
+            if(tipo === 'projeto') carregarDadosDoBanco("projetos", window.atualizarProjetosNaTela);
+            if(tipo === 'experiencia') carregarDadosDoBanco("experiencias", window.atualizarExperienciasNaTela);
+            if(tipo === 'formacao') carregarDadosDoBanco("formacoes", window.atualizarFormacoesNaTela);
+            
+            setTimeout(() => {
+              btnSalvarDado.innerHTML = btnOriginalText;
+              btnSalvarDado.style = '';
+            }, 2000);
+            
+          } catch (e) {
+            btnSalvarDado.innerHTML = '<i class="fa-solid fa-bug"></i> [ FALHA NO UPLOAD ]';
+            btnSalvarDado.style.borderColor = '#ef4444';
+            btnSalvarDado.style.color = '#ef4444';
+            setTimeout(() => { btnSalvarDado.innerHTML = btnOriginalText; btnSalvarDado.style = ''; }, 2500);
+          }
+        });
+      }
+
+      // 5. Função Universal de Busca no Banco
+      async function carregarDadosDoBanco(nomeColecao, funcaoCallback) {
         try {
-          const querySnapshot = await getDocs(collection(db, "projetos"));
-          const projetosDoBanco = [];
+          const querySnapshot = await getDocs(collection(db, nomeColecao));
+          const dadosDoBanco = [];
           
           querySnapshot.forEach((doc) => {
-            projetosDoBanco.push(doc.data());
+            dadosDoBanco.push(doc.data());
           });
 
-          // Se tiver projeto no banco, manda pro script.js renderizar
-          if (projetosDoBanco.length > 0 && typeof window.atualizarProjetosNaTela === 'function') {
-             window.atualizarProjetosNaTela(projetosDoBanco);
+          if (dadosDoBanco.length > 0 && typeof funcaoCallback === 'function') {
+             funcaoCallback(dadosDoBanco);
           }
         } catch (error) {
-          console.error("SISTEMA: Falha ao varrer o banco de dados.", error);
+          console.error(`SISTEMA: Falha ao varrer a coleção ${nomeColecao}.`, error);
         }
       }
 
-      // Executa a varredura inicial assim que o site carrega
-      carregarProjetosDoBanco();
+      // Inicia a varredura das 3 áreas assim que o site carrega!
+      carregarDadosDoBanco("projetos", window.atualizarProjetosNaTela);
+      carregarDadosDoBanco("experiencias", window.atualizarExperienciasNaTela);
+      carregarDadosDoBanco("formacoes", window.atualizarFormacoesNaTela);
+
+      // ==========================================
+      // LÓGICA DE EXCLUSÃO (DELETE NO BANCO)
+      // ==========================================
+      const btnCarregarExclusao = document.getElementById('btnCarregarExclusao');
+      const tipoExclusao = document.getElementById('tipoExclusao');
+      const listaExclusao = document.getElementById('listaExclusao');
+
+      if (btnCarregarExclusao) {
+        btnCarregarExclusao.addEventListener('click', async () => {
+          const colecaoAlvo = tipoExclusao.value;
+          listaExclusao.innerHTML = '<p style="color: #eab308; font-size: 0.85rem;"><i class="fa-solid fa-spinner fa-spin"></i> Quebrando criptografia...</p>';
+
+          try {
+            // Vai no banco e pega tudo da coleção escolhida
+            const querySnapshot = await getDocs(collection(db, colecaoAlvo));
+            listaExclusao.innerHTML = ''; 
+            
+            if (querySnapshot.empty) {
+              listaExclusao.innerHTML = '<p style="color: #10b981; font-size: 0.85rem;">Nenhum registro extra encontrado na nuvem.</p>';
+              return;
+            }
+
+            // Desenha os itens na tela
+            querySnapshot.forEach((documento) => {
+              const dados = documento.data();
+              const idDoDocumento = documento.id; // O ID secreto gerado pelo Firebase
+              
+              // Descobre o nome do item (Projetos usam 'nome', Missões usam 'titulo', Formação usa 'curso')
+              const nomeItem = dados.nome || dados.titulo || dados.curso || "Arquivo Desconhecido";
+
+              const divItem = document.createElement('div');
+              divItem.className = 'item-delete';
+              divItem.innerHTML = `
+                <span class="item-delete-titulo">- ${nomeItem}</span>
+                <button class="btn-deletar-item" data-id="${idDoDocumento}" data-colecao="${colecaoAlvo}">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              `;
+              listaExclusao.appendChild(divItem);
+            });
+
+            // Adiciona o poder de deletar aos botões de lixeira criados
+            document.querySelectorAll('.btn-deletar-item').forEach(btn => {
+              btn.addEventListener('click', async (e) => {
+                const idDeletar = e.currentTarget.getAttribute('data-id');
+                const colDeletar = e.currentTarget.getAttribute('data-colecao');
+                
+                if(confirm(`[ ATENÇÃO ] Confirma a EXCLUSÃO PERMANENTE deste registro da nuvem?`)) {
+                  e.currentTarget.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; // Loading no botão
+                  e.currentTarget.style.pointerEvents = 'none';
+
+                  try {
+                    // Executa a exclusão na nuvem!
+                    await deleteDoc(doc(db, colDeletar, idDeletar));
+                    
+                    // Recarrega a listinha vermelha do admin
+                    btnCarregarExclusao.click(); 
+                    
+                    // Força o seu portfólio a atualizar a tela principal (removendo o card que sumiu)
+                    if(colDeletar === 'projetos') carregarDadosDoBanco("projetos", window.atualizarProjetosNaTela);
+                    if(colDeletar === 'experiencias') carregarDadosDoBanco("experiencias", window.atualizarExperienciasNaTela);
+                    if(colDeletar === 'formacoes') carregarDadosDoBanco("formacoes", window.atualizarFormacoesNaTela);
+                    
+                  } catch(err) {
+                    alert("SISTEMA: Falha crítica ao apagar o registro.");
+                  }
+                }
+              });
+            });
+
+          } catch (error) {
+            listaExclusao.innerHTML = '<p style="color: #ef4444; font-size: 0.85rem;">SISTEMA: Falha de conexão com a base de dados.</p>';
+          }
+        });
+      }
     </script>
     
    

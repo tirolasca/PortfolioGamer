@@ -36,20 +36,20 @@ const conquistas = [
   { id: "fim", texto: "Fim da Jornada!", descricao: "Explorou todo o mapa e chegou ao Contato.", dica: "Desça até o fim da página para a recompensa final." },
 ];
 
-const formacoes = [
+// FORMAÇÕES (Base + Dinâmicas)
+const formacoesBase = [
   { curso: "Desenvolvimento de Software Multiplataforma", instituicao: "FATEC", periodo: "Em andamento" },
   { curso: "Desenvolvimento de Sistemas", instituicao: "ETEC", periodo: "Concluído" },
   { curso: "Redes de Computadores", instituicao: "SENAC", periodo: "Concluído" },
 ];
+let formacoes = [...formacoesBase];
 
-// Os seus projetos originais ficam salvos aqui:
+// PROJETOS (Base + Dinâmicos)
 const projetosBase = [
   { nome: "Planet Spotter", descricao: "Aplicação web desenvolvida no NASA Space Apps...", tecnologias: ["HTML", "CSS", "JavaScript"], categoria: "desafios", link: "https://nasasjc.vercel.app" },
   { nome: "Tempero da Casa", descricao: "Cardápio digital responsivo...", tecnologias: ["HTML", "CSS", "JavaScript"], categoria: "javascript", link: "https://temperodacasa.vercel.app" },
   { nome: "TaskMaster", descricao: "Gerenciador de tarefas moderno com React...", tecnologias: ["React", "TypeScript", "Vite"], categoria: "react", link: "https://taskmasterbr.vercel.app" },
 ];
-
-// Essa é a lista que o jogo vai usar (começa só com os base)
 let projetos = [...projetosBase];
 
 const skills = [
@@ -146,18 +146,56 @@ function carregarEstado() {
 // ==========================================
 // COMUNICAÇÃO COM A NUVEM (FIREBASE)
 // ==========================================
+
+// 1. Atualizar PROJETOS
 window.atualizarProjetosNaTela = function(projetosDaNuvem) {
-  console.log("Nuvem sincronizada! Projetos recebidos:", projetosDaNuvem);
-  
-  // 1. FUNDE os projetos do código com os projetos do Firebase!
   projetos = [...projetosBase, ...projetosDaNuvem]; 
-  
-  // 2. Manda o motor redesenhar a Fase 3
   renderProjetos(); 
-  
-  // 3. Força um "clique" no botão de filtro "Todos" para garantir que o projeto novo não fique invisível
   const btnTodos = document.querySelector('.btn-filtro[data-categoria="todos"]');
   if (btnTodos) btnTodos.click();
+};
+
+// 2. Atualizar FORMAÇÕES
+window.atualizarFormacoesNaTela = function(formacoesDaNuvem) {
+  formacoes = [...formacoesBase, ...formacoesDaNuvem];
+  renderFormacao();
+};
+
+// 3. Atualizar EXPERIÊNCIAS (Modo Híbrido: Mantém o HTML intacto)
+window.atualizarExperienciasNaTela = function(experienciasDaNuvem) {
+  const container = document.getElementById("listaExperiencias");
+  if (!container) return;
+
+  // 1. Limpa apenas as experiências que vieram da nuvem antes (evita duplicar quando você salva uma nova)
+  document.querySelectorAll('.timeline-item.nuvem').forEach(el => el.remove());
+
+  // 2. Injeta as experiências do Firebase no topo da sua lista HTML
+  let htmlDaNuvem = "";
+  experienciasDaNuvem.forEach(exp => {
+    htmlDaNuvem += `
+      <div class="timeline-item nuvem" style="animation: fadeIn 0.5s ease-in;">
+        <div class="timeline-dot" style="background: var(--gold-color); box-shadow: 0 0 10px var(--gold-color);"></div>
+        <div class="timeline-content card" style="border-color: var(--gold-color);">
+          <h3>💼 ${exp.titulo}</h3>
+          <h4>${exp.empresa}</h4>
+          <span class="muted">${exp.periodo}</span>
+          <div class="detalhes-missao">
+            <p>${exp.descricao}</p>
+          </div>
+          <button class="btn small outline toggle-btn">
+            <i class="fa-solid fa-eye"></i> Ver mais detalhes
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  // Adiciona as do banco de dados logo no começo da lista (afterbegin)
+  // Se quiser que fiquem no final, mude 'afterbegin' para 'beforeend'
+  container.insertAdjacentHTML('afterbegin', htmlDaNuvem);
+
+  // Reconecta o evento de clique nos botões novos para a timeline abrir
+  inicializarTimeline(); 
 };
 
 // ==========================================
@@ -538,6 +576,96 @@ function inicializarEventosGlobais() {
      window.location.href = window.location.pathname; // Recarrega a página de forma limpa
     });
   }
+
+  // ==========================================
+  // RASTREIO DA API DO GITHUB
+  // ==========================================
+  const btnRastreio = document.getElementById("btnRastreioGithub");
+  const githubOverlay = document.getElementById("githubOverlay");
+  const fecharGithub = document.getElementById("fecharGithub");
+  const githubTela = document.getElementById("githubTela");
+
+  if (btnRastreio && githubOverlay) {
+    btnRastreio.addEventListener("click", async () => {
+      // 1. Abre o modal e toca o som
+      githubOverlay.classList.remove("hidden");
+      if(typeof tocarSom === 'function') tocarSom('menu_open');
+
+      try {
+        // 2. Bate na porta do GitHub
+        const resposta = await fetch("https://api.github.com/users/tirolasca");
+        
+        if (!resposta.ok) throw new Error("Sinal perdido");
+        
+        const dados = await resposta.json();
+
+        // Tratamento de dados (Caso o perfil não tenha bio ou localização preenchidos)
+        const bio = dados.bio ? `"${dados.bio}"` : "Desenvolvedor de Software";
+        const localizacao = dados.location ? dados.location : "Planeta Terra";
+        const anoCriacao = new Date(dados.created_at).getFullYear();
+
+        // 3. Monta a interface holográfica COM DADOS EXPANDIDOS
+        githubTela.innerHTML = `
+          <img src="${dados.avatar_url}" alt="Avatar" style="width: 100px; border-radius: 50%; border: 3px solid #a855f7; box-shadow: 0 0 15px rgba(168,85,247,0.5); margin-bottom: 0.8rem; animation: popupShow 0.5s ease-out;">
+          
+          <h3 style="color: #fff; font-size: 1.4rem; margin-bottom: 0.1rem;">${dados.name || dados.login}</h3>
+          <p style="color: #a855f7; font-size: 0.9rem; margin-bottom: 0.8rem;">@${dados.login}</p>
+          
+          <p style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic; margin-bottom: 1rem; padding: 0 1rem;">${bio}</p>
+
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-bottom: 1.5rem; font-size: 0.8rem; color: #fff;">
+            <span style="background: rgba(168,85,247,0.1); padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid rgba(168,85,247,0.3);">
+              <i class="fa-solid fa-location-dot" style="color: #a855f7;"></i> ${localizacao}
+            </span>
+            <span style="background: rgba(168,85,247,0.1); padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid rgba(168,85,247,0.3);">
+              <i class="fa-solid fa-calendar-days" style="color: #a855f7;"></i> Dev desde ${anoCriacao}
+            </span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-around; background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+            <div>
+              <strong style="display: block; color: #a855f7; font-size: 1.5rem;">${dados.public_repos}</strong>
+              <span style="color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase;">Repositórios</span>
+            </div>
+            <div>
+              <strong style="display: block; color: #a855f7; font-size: 1.5rem;">${dados.followers}</strong>
+              <span style="color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase;">Seguidores</span>
+            </div>
+            <div>
+              <strong style="display: block; color: #a855f7; font-size: 1.5rem;">${dados.following}</strong>
+              <span style="color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase;">Seguindo</span>
+            </div>
+          </div>
+          
+          <a href="${dados.html_url}" target="_blank" class="btn-terminal" style="display: block; text-decoration: none; border-color: #a855f7; color: #a855f7; background: rgba(168,85,247,0.1);">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> ACESSAR BASE DE DADOS
+          </a>
+        `;
+      } catch (erro) {
+        githubTela.innerHTML = `
+          <p style="color: #ef4444; font-size: 1.2rem; margin-top: 2rem;">
+            <i class="fa-solid fa-triangle-exclamation fa-fade"></i><br><br>
+            FALHA NA CONEXÃO COM O SATÉLITE
+          </p>
+        `;
+      }
+    });
+
+    // Função de fechar o radar e resetar a tela de loading
+    fecharGithub.addEventListener("click", () => {
+      githubOverlay.classList.add("hidden");
+      if(typeof tocarSom === 'function') tocarSom('menu_close');
+      
+      // Devolve a mensagem de carregamento para a próxima vez que abrir
+      setTimeout(() => {
+        githubTela.innerHTML = `
+          <p class="terminal-text" style="color: #a855f7;">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Estabelecendo conexão com api.github.com...
+          </p>
+        `;
+      }, 500);
+    });
+  }
 }
 
 function inicializarMenuMobile() {
@@ -602,6 +730,9 @@ function inicializarFiltrosProjetos() {
 
 function inicializarMiniMapa() {
   const pontosMapa = document.querySelectorAll(".mapa-ponto");
+  const hudNav = document.querySelector('.hud-nav'); 
+
+  // 1. O Observador de Fase (Radar de Posição do Jogador)
   const mapaObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -613,11 +744,39 @@ function inicializarMiniMapa() {
   }, { threshold: 0.5 });
 
   document.querySelectorAll(".fase").forEach(sec => mapaObserver.observe(sec));
-}
+
+  // 2. O NOVO MOTOR PARALLAX (Ilusão de Profundidade 3D)
+  window.addEventListener("scroll", () => {
+    // Descobre qual a porcentagem da página você já desceu (0.0 até 1.0)
+    const limiteScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const scrollPercent = window.scrollY / limiteScroll;
+
+    // Efeito A: O Grid de fundo se move devagar (Efeito Radar)
+    if (hudNav) {
+      hudNav.style.backgroundPosition = `center ${window.scrollY * 0.05}px`;
+    }
+
+    // Deslocamento máximo seguro (Varia de -15px a +15px para não desalinhar a HUD)
+    const deslocamentoBase = (scrollPercent - 0.5) * 30;
+
+    // Efeito B: Os pontos flutuam em camadas (Verdadeiro Parallax)
+    pontosMapa.forEach((ponto, index) => {
+      // Cria uma variação minúscula entre os pontos. O primeiro move normal, o segundo move um pouco mais rápido...
+      const fatorProfundidade = 1 + (index * 0.15); 
+      const deslocamentoFinal = deslocamentoBase * fatorProfundidade;
+
+      // Mantém a escala maior se o ponto for o ativo
+      const scale = ponto.classList.contains("ativo") ? 'scale(1.3)' : 'scale(1)';
+      
+      // Aplica a magia matemática no CSS
+      ponto.style.transform = `translateY(${deslocamentoFinal}px) ${scale}`;
+    });
+  });
+} 
 
 function inicializarTimeline() {
   document.querySelectorAll(".toggle-btn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
+    btn.onclick = (e) => {
       const detalhes = e.currentTarget.previousElementSibling;
       detalhes.classList.toggle("open");
 
@@ -629,7 +788,7 @@ function inicializarTimeline() {
         e.currentTarget.innerHTML = '<i class="fa-solid fa-eye"></i> Ver mais detalhes';
         e.currentTarget.classList.remove("btn-acao");
       }
-    });
+    };
   });
 }
 
