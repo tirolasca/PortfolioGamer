@@ -226,7 +226,14 @@ function adicionarXP(pontos) {
     xpProximoNivel = nivelAtual * 100; 
     
     tocarSom('levelup');
-    if (typeof levelUpEffect === "function") levelUpEffect();
+    
+    // ANTES AQUI TINHA O CONFETE. AGORA TEMOS A ANIMAÇÃO SUTIL DE AURA:
+    const devLevelBadge = document.querySelector(".dev-level");
+    if (devLevelBadge) {
+      devLevelBadge.classList.add("level-up-glow");
+      // Remove a classe depois que a animação acaba para poder usar no próximo nível
+      setTimeout(() => devLevelBadge.classList.remove("level-up-glow"), 1500);
+    }
     
     mostrarNotificacaoNaTela(`LEVEL UP! Você alcançou o Nível ${nivelAtual}!`, true);
   }
@@ -728,9 +735,12 @@ function inicializarFiltrosProjetos() {
   });
 }
 
+// ==========================================
+// SISTEMA DE MINIMAPA COM PARALLAX 3D (PC) E BARRA FIXA (MOBILE)
+// ==========================================
 function inicializarMiniMapa() {
   const pontosMapa = document.querySelectorAll(".mapa-ponto");
-  const hudNav = document.querySelector('.hud-nav'); 
+  const miniMapaContainer = document.querySelector('.mini-mapa');
 
   // 1. O Observador de Fase (Radar de Posição do Jogador)
   const mapaObserver = new IntersectionObserver((entries) => {
@@ -747,32 +757,37 @@ function inicializarMiniMapa() {
 
   // 2. O NOVO MOTOR PARALLAX (Ilusão de Profundidade 3D)
   window.addEventListener("scroll", () => {
-    // Descobre qual a porcentagem da página você já desceu (0.0 até 1.0)
+    
+    // SE FOR CELULAR (Tela menor ou igual a 768px), IGNORA O PARALLAX!
+    if (window.innerWidth <= 768) {
+      // Garante que os pontos fiquem alinhados na barra
+      pontosMapa.forEach(ponto => {
+        const scale = ponto.classList.contains("ativo") ? 'scale(1.2)' : 'scale(1)';
+        ponto.style.transform = `translateY(0px) ${scale}`; 
+      });
+      return; // Aborta a animação de scroll
+    }
+
+    // --- DAQUI PRA BAIXO SÓ RODA NO PC (Efeito 3D) ---
     const limiteScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const scrollPercent = window.scrollY / limiteScroll;
 
-    // Efeito A: O Grid de fundo se move devagar (Efeito Radar)
-    if (hudNav) {
-      hudNav.style.backgroundPosition = `center ${window.scrollY * 0.05}px`;
+    // Move a malha de fundo devagar
+    if (miniMapaContainer) {
+      miniMapaContainer.style.backgroundPosition = `center ${window.scrollY * 0.05}px`;
     }
 
-    // Deslocamento máximo seguro (Varia de -15px a +15px para não desalinhar a HUD)
     const deslocamentoBase = (scrollPercent - 0.5) * 30;
 
-    // Efeito B: Os pontos flutuam em camadas (Verdadeiro Parallax)
+    // Faz os pontos flutuarem em camadas
     pontosMapa.forEach((ponto, index) => {
-      // Cria uma variação minúscula entre os pontos. O primeiro move normal, o segundo move um pouco mais rápido...
       const fatorProfundidade = 1 + (index * 0.15); 
       const deslocamentoFinal = deslocamentoBase * fatorProfundidade;
-
-      // Mantém a escala maior se o ponto for o ativo
       const scale = ponto.classList.contains("ativo") ? 'scale(1.3)' : 'scale(1)';
-      
-      // Aplica a magia matemática no CSS
       ponto.style.transform = `translateY(${deslocamentoFinal}px) ${scale}`;
     });
   });
-} 
+}
 
 function inicializarTimeline() {
   document.querySelectorAll(".toggle-btn").forEach(btn => {

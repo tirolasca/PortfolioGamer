@@ -512,6 +512,22 @@ main {
   }
 }
 
+@keyframes levelUpPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(251, 191, 36, 0); }
+  50% { 
+    transform: scale(1.15); 
+    box-shadow: 0 0 20px rgba(251, 191, 36, 1); 
+    background-color: var(--gold-color); 
+    color: #000; 
+  }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(251, 191, 36, 0); }
+}
+
+.level-up-glow {
+  /* Faz o botão pulsar 2 vezes rapidamente */
+  animation: levelUpPulse 0.6s ease-out 2; 
+}
+
 .hud-nav {
   background-image: 
     linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
@@ -986,9 +1002,10 @@ button:active, .btn-batalha:active {
 }
 
 /* ==========================================
-   TEMA GAMEBOY (COM EFEITO TV DE TUBO)
+   TEMA GAMEBOY (ULTRA 8-BIT EDITION)
    ========================================== */
 body.theme-gameboy {
+  /* Paleta Clássica do Gameboy DMG-01 */
   --bg-color: #8bac0f;
   --surface-color: #9bbc0f;
   --surface-hover: #306230;
@@ -997,74 +1014,146 @@ body.theme-gameboy {
   --accent-color: #0f380f;
   --boss-color: #0f380f;
   --gold-color: #0f380f;
-  font-family: var(--font-titulo);
-  background-image: none; /* Tira o grid moderno */
+
+  /* Força a fonte primária a ser a pixelada */
+  font-family: var(--font-titulo), 'Courier New', monospace;
+  background-image: none;
+  background-color: var(--bg-color);
 }
 
-/* 5. EFEITO NOVO: Scanlines Sutis - Deixam a tela nítida para ler e passam por cima de tudo */
+/* 1. MATA TRANSIÇÕES MODERNAS (8-bit é duro e seco) */
+body.theme-gameboy * {
+  transition: none !important;
+}
+
+/* 2. EFEITO CRT / SCANLINES (Mais imersivo com a paleta verde) */
 body.theme-gameboy::after {
   content: " ";
   display: block;
   position: fixed;
   top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+  background: linear-gradient(rgba(15, 56, 15, 0) 50%, rgba(15, 56, 15, 0.1) 50%);
   z-index: 9999999;
   background-size: 100% 4px;
-  pointer-events: none; /* Para o mouse passar direto pelas linhas */
+  pointer-events: none;
 }
 
-body.theme-gameboy ::-webkit-scrollbar-thumb { background: #306230; }
+/* 3. SCROLLBAR EM BLOCOS RETRÔ */
+body.theme-gameboy::-webkit-scrollbar { width: 12px; }
+body.theme-gameboy::-webkit-scrollbar-track { background: #8bac0f; border-left: 4px solid #0f380f; }
+body.theme-gameboy::-webkit-scrollbar-thumb { background: #0f380f; }
 
-body.theme-gameboy .card {
-  border: 4px solid #0f380f;
-  border-radius: 0;
-  box-shadow: 6px 6px 0px #0f380f;
+/* 4. CARDS DE 8 BITS VERDADEIROS (Sem cantos arredondados) */
+body.theme-gameboy .card, 
+body.theme-gameboy .terminal-box,
+body.theme-gameboy .npc-balao {
+  border: 4px solid #0f380f !important;
+  border-radius: 0 !important;
+  background: #9bbc0f !important;
+  box-shadow: 6px 6px 0px #0f380f !important;
+  color: #0f380f !important;
 }
 
-body.theme-gameboy .card::before { display: none; } /* Desliga o brilho moderno */
+/* Remove os brilhos neon modernos */
+body.theme-gameboy .card::before,
+body.theme-gameboy .terminal-box::before { display: none !important; }
 
-body.theme-gameboy .loot-item,
-body.theme-gameboy .slot { display: none; }
-
-.btn-toggle-tema.hidden { display: none; }
-
+/* 5. BOTÕES "CLICÁVEIS" (Física de 8-bit) */
+body.theme-gameboy .btn,
+body.theme-gameboy .btn-terminal,
+body.theme-gameboy .btn-batalha,
 body.theme-gameboy .btn-toggle-tema {
-  background: #306230; color: #9bbc0f; border-color: #0f380f;
+  background: #306230 !important;
+  color: #9bbc0f !important;
+  border: 4px solid #0f380f !important;
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0px #0f380f !important;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
+/* Hover: Inverte as cores */
+body.theme-gameboy .btn:hover,
+body.theme-gameboy .btn-terminal:hover,
+body.theme-gameboy .btn-batalha:hover,
 body.theme-gameboy .btn-toggle-tema:hover {
-  background: #0f380f; color: #8bac0f;
+  background: #0f380f !important;
+  color: #8bac0f !important;
 }
 
-body.theme-gameboy [data-tooltip]::after {
-  background: #0f380f !important; color: #8bac0f; border-color: #9bbc0f; border-radius: 0;
+/* Active (O Truque: O botão "afunda" e a sombra some quando clica) */
+body.theme-gameboy .btn:active,
+body.theme-gameboy .btn-terminal:active,
+body.theme-gameboy .btn-batalha:active,
+body.theme-gameboy .btn-toggle-tema:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0px 0px 0px #0f380f !important;
 }
 
-body.theme-gameboy [data-tooltip]::before { border-left-color: #9bbc0f; }
-
-body.theme-gameboy .hud, body.theme-gameboy .hud-nav {
-  background: #9bbc0f; border-bottom: 4px solid #0f380f; backdrop-filter: none;
+/* 7. HUD, MINIMAPA E MENUS */
+body.theme-gameboy .hud, 
+body.theme-gameboy .hud-nav,
+body.theme-gameboy .mini-mapa {
+  background: #9bbc0f !important; 
+  border-color: #0f380f !important; 
+  backdrop-filter: none !important;
+  border-width: 4px !important;
 }
 
 body.theme-gameboy .dev-level,
 body.theme-gameboy .hud nav a,
 body.theme-gameboy .btn-som,
-body.theme-gameboy .btn-menu {
-  color: #0f380f; text-shadow: none; animation: none;
+body.theme-gameboy .btn-menu,
+body.theme-gameboy .mapa-ponto {
+  color: #0f380f !important; 
+  text-shadow: none !important; 
+  background: #8bac0f !important;
+  border: 4px solid #0f380f !important;
+  border-radius: 0 !important;
 }
 
-body.theme-gameboy .hud nav a:hover,
-body.theme-gameboy .btn-som:hover,
-body.theme-gameboy .btn-menu:hover { color: #306230; transform: none; }
-
-body.theme-gameboy .btn-som.mutado { color: #306230; opacity: 0.7; }
-
-body.theme-gameboy .npc-balao {
-  background: #9bbc0f; border: 4px solid #0f380f; box-shadow: 6px 6px 0px #0f380f;
+/* Desliga a animação de radar suave, mantendo duro */
+body.theme-gameboy .mapa-ponto.ativo {
+  background: #0f380f !important;
+  color: #9bbc0f !important;
+  animation: none !important; 
 }
-body.theme-gameboy .npc-balao p { color: #0f380f; }
-body.theme-gameboy .btn-fechar-npc { color: #0f380f; }
-body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2); }
+
+/* 8. OCULTA ELEMENTOS QUE QUEBRAM A IMERSÃO */
+body.theme-gameboy .loot-item,
+body.theme-gameboy .slot,
+body.theme-gameboy .mapa-linha { display: none !important; }
+
+body.theme-gameboy [data-tooltip]::after {
+  background: #0f380f !important; color: #8bac0f !important; border-radius: 0 !important; border: 2px solid #9bbc0f;
+}
+body.theme-gameboy [data-tooltip]::before { border-left-color: #9bbc0f !important; }
+
+/* 1. Tira a caixa de volta do Nível (HUD) */
+body.theme-gameboy .dev-level {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* 2. Tira a caixa da Logo (seja texto ou imagem) */
+body.theme-gameboy .logo,
+body.theme-gameboy .hud h1,
+body.theme-gameboy .hud img {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* 3. Tira a caixa de volta do Sprite do NPC (O personagem) */
+body.theme-gameboy .npc-sprite,
+body.theme-gameboy .npc-sprite img {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  /* Garante que o fundo dele fique invisível como num jogo antigo */
+}
 
 /* ==========================================
    ANIMAÇÕES E OVERLAYS (MANTIDOS INTACTOS)
@@ -1406,4 +1495,5 @@ body.theme-gameboy .btn-fechar-npc:hover { color: #306230; transform: scale(1.2)
   .terminal-body::before {
     position: fixed;
   }
+  
 }
