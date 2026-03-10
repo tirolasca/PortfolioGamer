@@ -1155,6 +1155,80 @@ body.theme-gameboy .npc-sprite img {
   /* Garante que o fundo dele fique invisível como num jogo antigo */
 }
 
+/* 1. O Botão de Reset (Agora 100% legível e bruto) */
+body.theme-gameboy #resetJornada {
+  background: #0f380f !important; /* Verde mais escuro */
+  color: #9bbc0f !important;      /* Letra verde clara */
+  border: 4px solid #0f380f !important;
+  box-shadow: 4px 4px 0px #306230 !important;
+  border-radius: 0 !important;
+  text-transform: uppercase;
+}
+
+body.theme-gameboy #resetJornada:hover {
+  background: #306230 !important;
+  color: #8bac0f !important;
+}
+
+/* 2. O Painel Principal de Conquistas */
+body.theme-gameboy .conquistas {
+  background: #8bac0f !important; /* Fundo base da tela do Gameboy */
+  border: 6px solid #0f380f !important;
+  border-radius: 0 !important;
+  box-shadow: -8px 8px 0px rgba(15, 56, 15, 0.8) !important; /* Sombra dura */
+}
+
+/* Títulos e textos dentro do painel */
+body.theme-gameboy .conquistas h2,
+body.theme-gameboy .conquistas p {
+  color: #0f380f !important;
+  font-family: var(--font-titulo), 'Courier New', monospace !important;
+  text-shadow: none !important;
+}
+
+/* 3. Os Itens da Lista de Conquistas */
+body.theme-gameboy .conquista-item {
+  background: #9bbc0f !important;
+  border: 4px solid #0f380f !important;
+  border-radius: 0 !important;
+  color: #0f380f !important;
+  margin-bottom: 10px !important;
+  box-shadow: 2px 2px 0px #0f380f !important;
+}
+
+/* Conquistas Desbloqueadas (Brilham mais na tela do Gameboy) */
+body.theme-gameboy .conquista-item.desbloqueada {
+  background: #9bbc0f !important;
+  color: #0f380f !important;
+}
+body.theme-gameboy .conquista-item.desbloqueada i {
+  color: #0f380f !important; /* Ícone do troféu escuro */
+}
+
+/* Conquistas Bloqueadas (Aparência apagada/tracejada) */
+body.theme-gameboy .conquista-item.bloqueada {
+  background: #306230 !important;
+  color: #8bac0f !important;
+  border: 4px dashed #0f380f !important; /* Borda tracejada de "falta descobrir" */
+  box-shadow: none !important;
+}
+body.theme-gameboy .conquista-item.bloqueada i {
+  color: #0f380f !important; /* Cadeado escuro */
+}
+
+/* 4. Botão de Fechar o Menu Mobile (X) */
+body.theme-gameboy #fecharConquistasMobile {
+  background: transparent !important;
+  color: #0f380f !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.theme-gameboy #fecharConquistasMobile:hover {
+  transform: scale(1.2) !important;
+  color: #306230 !important;
+}
+
 /* ==========================================
    ANIMAÇÕES E OVERLAYS (MANTIDOS INTACTOS)
    ========================================== */
